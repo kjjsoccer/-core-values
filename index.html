@@ -1,1 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Values → Full Bucket</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #eef2f1;
+      color: #17343b;
+    }
+    .app {
+      max-width: 620px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #fbfaf6;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #fbfaf6;
+      border-bottom: 1px solid #d9e2df;
+      padding: 14px 18px;
+      font-weight: 700;
+    }
+    .brand-accent { color: #176b73; }
+    .progress-track {
+      height: 5px;
+      margin-top: 10px;
+      background: #e3e9e7;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #176b73;
+      transition: width 0.2s ease;
+    }
+    main { padding: 26px 18px 44px; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #176b73;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 32px;
+      line-height: 1.1;
+      margin: 0 0 14px;
+    }
+    h2 { margin: 0 0 10px; }
+    p { line-height: 1.5; }
+    .lead {
+      font-size: 18px;
+      color: #40595f;
+    }
+    .muted { color: #687b7f; }
+    .tip, .panel {
+      border: 1px solid #d9e2df;
+      border-radius: 16px;
+      padding: 15px;
+      margin: 14px 0;
+      background: white;
+    }
+    .tip { background: #eef6f4; }
+    .btn {
+      display: block;
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px 16px;
+      margin-top: 10px;
+      font-weight: 700;
+      background: #176b73;
+      color: white;
+      font-size: 16px;
+    }
+    .btn.secondary {
+      background: white;
+      color: #176b73;
+      border: 1px solid #d9e2df;
+    }
+    .btn:disabled { opacity: 0.4; }
+    .round-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .round-tag {
+      white-space: nowrap;
+      background: #e8f3f1;
+      color: #176b73;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .timer {
+      text-align: right;
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    .selection-bar {
+      position: sticky;
+      top: 62px;
+      z-index: 8;
+      background: #fbfaf6;
+      padding: 10px 0 12px;
+      border-bottom: 1px solid #d9e2df;
+    }
+    .tray {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-top: 8px;
+    }
+    .chip {
+      white-space: nowrap;
+      background: #e8f3f1;
+      color: #176b73;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .card {
+      min-height: 110px;
+      text-align: left;
+      border: 1px solid #d9e2df;
+      border-radius: 16px;
+      background: white;
+      padding: 14px;
+      color: #17343b;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .card.selected {
+      border: 2px solid #176b73;
+      background: #edf8f6;
+    }
+    .card small {
+      display: block;
+      margin-top: 8px;
+      color: #687b7f;
+      font-size: 11px;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d9e2df;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    textarea { min-height: 96px; }
+    .activity-row {
+      display: flex;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .activity-row input { flex: 1; }
+    .remove-btn {
+      width: 42px;
+      border: 1px solid #d9e2df;
+      border-radius: 10px;
+      background: white;
+      font-size: 20px;
+    }
+    .bucket {
+      position: relative;
+      width: 180px;
+      height: 220px;
+      margin: 24px auto;
+      overflow: hidden;
+      border: 4px solid #8b9c9b;
+      border-top: none;
+      border-radius: 0 0 42px 42px;
+      background: #f2f4f0;
+    }
+    .bucket-fill {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 8%;
+      background: #94cbc5;
+      transition: height 0.4s ease;
+    }
+    .bucket-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      font-weight: 700;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stats .panel strong {
+      display: block;
+      font-size: 26px;
+      color: #176b73;
+    }
+    footer {
+      padding: 20px 18px 32px;
+      text-align: center;
+      font-size: 11px;
+      color: #7c8b8e;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      Core Values → <span class="brand-accent">Full Bucket</span>
+      <div class="progress-track"><div class="progress-fill" id="progress"></div></div>
+    </header>
 
+    <main>
+      <section id="welcome" class="screen active">
+        <div class="eyebrow">A self-discovery exercise</div>
+        <h1>What matters most to you?</h1>
+        <p class="lead">Not what you think <em>should</em> matter. What actually matters to <strong>you</strong>.</p>
+        <div class="tip"><strong>Nothing is final until you lock it in.</strong> You can move cards in and out of your Keep group as often as you want.</div>
+        <p>You will move through <strong>80+ → 40 → 20 → 10 → 3</strong>, define your final three in your own words, then discover what actually fills each bucket.</p>
+        <button class="btn" onclick="showScreen('how')">Begin</button>
+      </section>
+
+      <section id="how" class="screen">
+        <div class="eyebrow">Before you begin</div>
+        <h1>Trust your first reaction.</h1>
+        <p class="lead">The timer is gentle. It encourages instinct, but it never throws away your choices.</p>
+        <div class="tip"><strong>Ask yourself:</strong> “If I could keep only some of these, which ones would I hate to lose?”</div>
+        <button class="btn" onclick="startExercise()">Start Round 1</button>
+      </section>
+
+      <section id="sort" class="screen">
+        <div class="round-head">
+          <div>
+            <div class="eyebrow">Your choices</div>
+            <h2 id="roundTitle"></h2>
+            <p id="roundInstruction" class="muted"></p>
+          </div>
+          <div>
+            <div class="round-tag" id="roundTag"></div>
+            <div class="timer" id="timer"></div>
+          </div>
+        </div>
+        <div class="selection-bar">
+          <strong><span id="selectedCount">0</span> selected</strong> · target <span id="targetCount"></span>
+          <div class="tray" id="tray"></div>
+        </div>
+        <div class="grid" id="cardGrid"></div>
+        <p class="muted">Tap any card to move it between <strong>Keep</strong> and <strong>Not Now</strong>. Nothing is final until you lock the round.</p>
+        <button class="btn" id="lockButton" disabled onclick="lockRound()">Lock in my choices</button>
+        <button class="btn secondary" onclick="clearRound()">Clear this round</button>
+      </section>
+
+      <section id="review" class="screen">
+        <div class="eyebrow">Round locked</div>
+        <h1>These survived.</h1>
+        <p class="muted">The next round asks you to choose again from only these values.</p>
+        <div id="reviewList"></div>
+        <button class="btn" onclick="goToNextRound()">Continue</button>
+      </section>
+
+      <section id="final" class="screen">
+        <div class="eyebrow">Your three</div>
+        <h1>Do these feel like you?</h1>
+        <p class="lead">If one does not fit, that is useful information — not a wrong answer.</p>
+        <div id="finalList"></div>
+        <button class="btn" onclick="openDefinitions()">Yes — these feel like me</button>
+        <button class="btn secondary" onclick="reconsiderThree()">Something doesn't fit</button>
+      </section>
+
+      <section id="define" class="screen">
+        <div class="eyebrow">Make them personal</div>
+        <h1>What does each value mean to you?</h1>
+        <p class="muted">Forget the dictionary. Your definition is the one that matters here.</p>
+        <div id="definitionBox"></div>
+        <button class="btn" onclick="saveDefinitions()">Save my definitions</button>
+      </section>
+
+      <section id="activities" class="screen">
+        <div class="eyebrow">Fill your bucket</div>
+        <h1>What actually supports these values?</h1>
+        <p class="lead">A person, place, activity, experience, music, nature, stillness, creativity — whatever genuinely replenishes that part of you.</p>
+        <div id="activityBox"></div>
+        <div class="tip"><strong>Don't prescribe yourself.</strong> Something you think you “should” do may not actually fill your bucket.</div>
+        <button class="btn" onclick="saveActivities()">Save my bucket fillers</button>
+      </section>
+
+      <section id="dashboard" class="screen">
+        <div class="eyebrow">Your bucket</div>
+        <h1>Notice what fills you.</h1>
+        <p class="muted">This is a visual reflection, not a clinical score and not a streak.</p>
+        <div class="bucket">
+          <div class="bucket-fill" id="bucketFill"></div>
+          <div class="bucket-label">What has been filling my bucket lately?</div>
+        </div>
+        <div class="stats">
+          <div class="panel"><strong id="helpedCount">0</strong>helped</div>
+          <div class="panel"><strong id="otherCount">0</strong>didn't help / not this time</div>
+        </div>
+        <button class="btn" onclick="openCheckin()">Gentle check-in</button>
+        <button class="btn secondary" onclick="openMap()">My personal map</button>
+        <button class="btn secondary" onclick="renderActivities(); showScreen('activities')">Change bucket fillers</button>
+        <button class="btn secondary" onclick="openSettings()">Settings</button>
+      </section>
+
+      <section id="checkin" class="screen">
+        <div class="eyebrow">Gentle check-in</div>
+        <h1>What happened this time?</h1>
+        <p class="muted">Simply notice. Missed activities are information, not failure.</p>
+        <div id="checkinList"></div>
+        <button class="btn secondary" onclick="renderDashboard(); showScreen('dashboard')">Back</button>
+      </section>
+
+      <section id="reflection" class="screen">
+        <div class="eyebrow">A little more noticing</div>
+        <h1>What might this be telling you?</h1>
+        <div id="reflectionContent"></div>
+        <button class="btn" onclick="renderDashboard(); showScreen('dashboard')">Back to my bucket</button>
+      </section>
+
+      <section id="map" class="screen">
+        <div class="eyebrow">Your personal map</div>
+        <h1>What matters to me.</h1>
+        <div id="mapContent"></div>
+        <button class="btn" onclick="renderDashboard(); showScreen('dashboard')">Back</button>
+      </section>
+
+      <section id="settings" class="screen">
+        <div class="eyebrow">Settings</div>
+        <h1>Keep it yours.</h1>
+        <div class="tip"><strong>Test mode</strong> shortens each sorting timer to 20 seconds.</div>
+        <button class="btn secondary" id="testModeButton" onclick="toggleTestMode()">Test mode: OFF</button>
+        <button class="btn secondary" onclick="resetEverything()">Reset everything</button>
+        <button class="btn secondary" onclick="renderDashboard(); showScreen('dashboard')">Back</button>
+      </section>
+    </main>
+
+    <footer>Self-reflection and wellness tool. Not therapy, diagnosis, or a replacement for professional care.</footer>
+  </div>
+
+  <script>
+    const VALUES = [
+      "Acceptance","Adventure","Authenticity","Beauty","Belonging","Calm","Challenge","Community","Compassion","Connection",
+      "Contentment","Contribution","Courage","Creativity","Curiosity","Dependability","Discipline","Discovery","Education","Efficiency",
+      "Equality","Excellence","Family","Faith","Financial Security","Freedom","Friendship","Fun","Generosity","Growth",
+      "Health","Honesty","Hope","Humility","Independence","Inner Peace","Integrity","Joy","Justice","Kindness",
+      "Knowledge","Leadership","Learning","Loyalty","Love","Meaning","Music","Nature","Open-mindedness","Order",
+      "Patience","Peace","Personal Growth","Play","Pleasure","Privacy","Purpose","Reliability","Respect","Responsibility",
+      "Safety","Self-Discipline","Self-Expression","Self-Respect","Service","Simplicity","Spirituality","Stability","Stillness","Strength",
+      "Success","Support","Teaching","Tradition","Trust","Truth","Understanding","Variety","Vitality","Wisdom","Wonder","Work"
+    ];
+
+    const TARGETS = [40, 20, 10, 3];
+    const TIMES = [300, 240, 180, 120];
+    const STORAGE_KEY = "core_values_full_bucket_v4";
+
+    let state = loadState();
+    let timerHandle = null;
+    let lockedChoices = [];
+
+    function freshState() {
+      return {
+        round: 1,
+        deck: VALUES.slice(),
+        selected: [],
+        roundPools: {1: VALUES.slice()},
+        finalThree: [],
+        definitions: {},
+        activities: {},
+        checkins: [],
+        testMode: false
+      };
+    }
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        return saved || freshState();
+      } catch (err) {
+        return freshState();
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function escapeHTML(text) {
+      return String(text == null ? "" : text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+      });
+      document.getElementById(id).classList.add("active");
+
+      const progressMap = {
+        welcome: 0, how: 5, sort: 25, review: 50, final: 70,
+        define: 80, activities: 90, dashboard: 100, checkin: 100,
+        reflection: 100, map: 100, settings: 100
+      };
+      document.getElementById("progress").style.width = (progressMap[id] || 0) + "%";
+      window.scrollTo(0, 0);
+    }
+
+    function startExercise() {
+      state = freshState();
+      saveState();
+      setupRound();
+      showScreen("sort");
+    }
+
+    function setupRound() {
+      const r = state.round;
+      document.getElementById("roundTitle").textContent = "Round " + r + " of 4";
+      document.getElementById("roundTag").textContent = state.deck.length + " → " + TARGETS[r - 1];
+      document.getElementById("targetCount").textContent = TARGETS[r - 1];
+
+      const instructions = [
+        "Start broad. Keep the values you would genuinely miss.",
+        "Now make the harder choices. Which ones matter more?",
+        "Which values feel closest to the life you want to live?",
+        "Three only. Which three would you want your life to stand on?"
+      ];
+      document.getElementById("roundInstruction").textContent = instructions[r - 1];
+
+      renderCards();
+      startTimer();
+    }
+
+    function renderCards() {
+      const grid = document.getElementById("cardGrid");
+      grid.innerHTML = "";
+
+      state.deck.forEach(function(value) {
+        const button = document.createElement("button");
+        const selected = state.selected.indexOf(value) !== -1;
+        button.className = "card" + (selected ? " selected" : "");
+        button.innerHTML = escapeHTML(value) + "<small>" + (selected ? "KEEP" : "NOT NOW") + "</small>";
+        button.onclick = function() { toggleValue(value); };
+        grid.appendChild(button);
+      });
+
+      document.getElementById("selectedCount").textContent = state.selected.length;
+      document.getElementById("lockButton").disabled = state.selected.length !== TARGETS[state.round - 1];
+
+      const tray = document.getElementById("tray");
+      tray.innerHTML = state.selected.map(function(value) {
+        return '<span class="chip">' + escapeHTML(value) + "</span>";
+      }).join("");
+
+      saveState();
+    }
+
+    function toggleValue(value) {
+      const index = state.selected.indexOf(value);
+      if (index !== -1) {
+        state.selected.splice(index, 1);
+      } else {
+        state.selected.push(value);
+      }
+      renderCards();
+    }
+
+    function clearRound() {
+      state.selected = [];
+      renderCards();
+    }
+
+    function startTimer() {
+      clearInterval(timerHandle);
+      let seconds = state.testMode ? 20 : TIMES[state.round - 1];
+
+      function paint() {
+        const timer = document.getElementById("timer");
+        if (seconds <= 0) {
+          timer.textContent = "Take a breath";
+          clearInterval(timerHandle);
+          return;
+        }
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        timer.textContent =
+          String(minutes).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+        seconds -= 1;
+      }
+
+      paint();
+      timerHandle = setInterval(paint, 1000);
+    }
+
+    function lockRound() {
+      if (state.selected.length !== TARGETS[state.round - 1]) return;
+
+      clearInterval(timerHandle);
+      lockedChoices = state.selected.slice();
+
+      if (state.round === 4) {
+        state.finalThree = lockedChoices.slice();
+        saveState();
+        renderFinalThree();
+        showScreen("final");
+        return;
+      }
+
+      document.getElementById("reviewList").innerHTML = lockedChoices.map(function(value) {
+        return '<div class="panel"><strong>' + escapeHTML(value) + "</strong></div>";
+      }).join("");
+
+      showScreen("review");
+    }
+
+    function goToNextRound() {
+      state.round += 1;
+      state.deck = lockedChoices.slice();
+      state.roundPools[state.round] = state.deck.slice();
+      state.selected = [];
+      saveState();
+      setupRound();
+      showScreen("sort");
+    }
+
+    function renderFinalThree() {
+      document.getElementById("finalList").innerHTML = state.finalThree.map(function(value, index) {
+        return '<div class="panel"><div class="eyebrow">Value ' + (index + 1) +
+          '</div><h2>' + escapeHTML(value) + "</h2></div>";
+      }).join("");
+    }
+
+    function reconsiderThree() {
+      state.round = 4;
+      state.deck = (state.roundPools[4] || []).slice();
+      state.selected = [];
+      saveState();
+      setupRound();
+      showScreen("sort");
+    }
+
+    function openDefinitions() {
+      renderDefinitions();
+      showScreen("define");
+    }
+
+    function renderDefinitions() {
+      document.getElementById("definitionBox").innerHTML = state.finalThree.map(function(value, index) {
+        return '<div class="panel"><div class="eyebrow">Value ' + (index + 1) +
+          '</div><h2>' + escapeHTML(value) + '</h2>' +
+          '<textarea data-value="' + escapeHTML(value) +
+          '" placeholder="In my life, this means...">' +
+          escapeHTML(state.definitions[value] || "") + "</textarea></div>";
+      }).join("");
+    }
+
+    function saveDefinitions() {
+      document.querySelectorAll("#definitionBox textarea").forEach(function(area) {
+        state.definitions[area.getAttribute("data-value")] = area.value.trim();
+      });
+      saveState();
+      renderActivities();
+      showScreen("activities");
+    }
+
+    function renderActivities() {
+      const container = document.getElementById("activityBox");
+      container.innerHTML = "";
+
+      state.finalThree.forEach(function(value) {
+        const panel = document.createElement("div");
+        panel.className = "panel";
+        panel.innerHTML =
+          '<div class="eyebrow">Supports</div><h2>' + escapeHTML(value) +
+          '</h2><div class="activity-rows"></div>' +
+          '<p class="muted">What, where, who, or how? What has actually connected you to this value?</p>' +
+          '<button class="btn secondary add-activity" type="button">+ Add another</button>';
+
+        container.appendChild(panel);
+        const rows = panel.querySelector(".activity-rows");
+
+        function addRow(text) {
+          const row = document.createElement("div");
+          row.className = "activity-row";
+          row.innerHTML =
+            '<input type="text" data-value="' + escapeHTML(value) +
+            '" value="' + escapeHTML(text || "") +
+            '" placeholder="A person, place, activity or experience">' +
+            '<button class="remove-btn" type="button">×</button>';
+
+          row.querySelector(".remove-btn").onclick = function() {
+            row.remove();
+          };
+          rows.appendChild(row);
+        }
+
+        const existing = state.activities[value] || [];
+        if (existing.length) existing.forEach(addRow);
+        else addRow("");
+
+        panel.querySelector(".add-activity").onclick = function() {
+          addRow("");
+        };
+      });
+    }
+
+    function saveActivities() {
+      state.finalThree.forEach(function(value) {
+        const items = [];
+        document.querySelectorAll('#activityBox input[data-value="' + value.replace(/"/g, '\"') + '"]').forEach(function(input) {
+          if (input.value.trim()) items.push(input.value.trim());
+        });
+        state.activities[value] = items;
+      });
+
+      saveState();
+      renderDashboard();
+      showScreen("dashboard");
+    }
+
+    function getAllActivities() {
+      const list = [];
+      state.finalThree.forEach(function(value) {
+        (state.activities[value] || []).forEach(function(activity) {
+          list.push({ value: value, activity: activity });
+        });
+      });
+      return list;
+    }
+
+    function renderDashboard() {
+      const helped = state.checkins.filter(function(item) {
+        return item.result === "helped";
+      }).length;
+
+      document.getElementById("helpedCount").textContent = helped;
+      document.getElementById("otherCount").textContent = state.checkins.length - helped;
+      document.getElementById("bucketFill").style.height = Math.min(82, 8 + helped * 14) + "%";
+    }
+
+    function openCheckin() {
+      const list = document.getElementById("checkinList");
+      const activities = getAllActivities();
+      list.innerHTML = "";
+
+      if (!activities.length) {
+        list.innerHTML = '<div class="tip">You have not added any bucket fillers yet.</div>';
+      }
+
+      activities.forEach(function(item, index) {
+        const panel = document.createElement("div");
+        panel.className = "panel";
+        panel.innerHTML =
+          '<div class="eyebrow">' + escapeHTML(item.value) + '</div>' +
+          '<h2>' + escapeHTML(item.activity) + '</h2>' +
+          '<button class="btn" data-result="helped">I did it — it helped</button>' +
+          '<button class="btn secondary" data-result="didnt">I did it — it didn’t help</button>' +
+          '<button class="btn secondary" data-result="missed">Not this time</button>';
+
+        panel.querySelectorAll("[data-result]").forEach(function(button) {
+          button.onclick = function() {
+            recordCheckin(index, button.getAttribute("data-result"));
+          };
+        });
+
+        list.appendChild(panel);
+      });
+
+      showScreen("checkin");
+    }
+
+    function recordCheckin(index, result) {
+      const item = getAllActivities()[index];
+      state.checkins.push({
+        value: item.value,
+        activity: item.activity,
+        result: result,
+        date: new Date().toISOString()
+      });
+      saveState();
+
+      if (result === "helped") {
+        renderDashboard();
+        showScreen("dashboard");
+        return;
+      }
+
+      const repeats = state.checkins.filter(function(log) {
+        return log.activity === item.activity && log.result === result;
+      }).length;
+
+      let html = "";
+      if (result === "missed") {
+        html += '<div class="tip"><strong>You didn’t do it this time.</strong><br>That is information, not failure.</div>';
+        if (repeats >= 2) {
+          html += '<div class="panel"><h2>Is this realistic right now?</h2><p class="muted">What got in the way? Or is this something you chose because you thought you should?</p></div>';
+        }
+      } else {
+        html += '<div class="tip"><strong>You did it — and it didn’t help.</strong><br>That is useful information too.</div>';
+        if (repeats >= 2) {
+          html += '<div class="panel"><h2>Does this really support ' + escapeHTML(item.value) + '?</h2><p class="muted">If it repeatedly does not replenish you, try something different.</p></div>';
+        }
+      }
+
+      document.getElementById("reflectionContent").innerHTML = html;
+      showScreen("reflection");
+    }
+
+    function openMap() {
+      document.getElementById("mapContent").innerHTML = state.finalThree.map(function(value, index) {
+        const activityList = state.activities[value] || [];
+        const listHTML = activityList.length
+          ? "<ul>" + activityList.map(function(item) { return "<li>" + escapeHTML(item) + "</li>"; }).join("") + "</ul>"
+          : '<p class="muted">Nothing added yet.</p>';
+
+        return '<div class="panel"><div class="eyebrow">Value ' + (index + 1) +
+          '</div><h2>' + escapeHTML(value) + '</h2>' +
+          '<p><strong>What it means to me</strong><br>' +
+          escapeHTML(state.definitions[value] || "Not defined yet.") + '</p>' +
+          '<p><strong>What fills this bucket</strong></p>' + listHTML + "</div>";
+      }).join("");
+
+      showScreen("map");
+    }
+
+    function openSettings() {
+      document.getElementById("testModeButton").textContent =
+        "Test mode: " + (state.testMode ? "ON" : "OFF");
+      showScreen("settings");
+    }
+
+    function toggleTestMode() {
+      state.testMode = !state.testMode;
+      saveState();
+      openSettings();
+    }
+
+    function resetEverything() {
+      if (confirm("Reset the entire exercise and start over?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    }
+  </script>
+</body>
+</html>
