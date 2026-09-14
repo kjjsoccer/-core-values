@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f8faf8">
+<title>Core Values → Full Bucket — MVP 3</title>
+<style>
+:root{
+  --ink:#18363a;--teal:#2f7776;--teal-dark:#245f60;--teal-soft:#dceeed;--teal-softer:#edf6f4;
+  --cream:#fbf9f3;--card:#fffefb;--gold:#d9ad58;--muted:#667679;--line:#d7e1de;--shadow:0 7px 22px rgba(22,54,59,.08);
+  --danger:#9b4b45
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.42}
+button,input,textarea,select{font:inherit}
+button{touch-action:manipulation}
+.app{max-width:760px;margin:auto;min-height:100vh;background:#fff}
+.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line);padding:9px 14px 8px}
+.toprow{display:flex;align-items:center;justify-content:space-between;gap:8px}.brand{font-weight:850;color:var(--teal-dark);font-size:16px}.resume{font-size:11px;color:var(--muted)}
+.progress{height:4px;background:#e9efed;border-radius:8px;margin-top:7px;overflow:hidden}.progress>div{height:100%;background:var(--teal);width:0;transition:.25s}
+main{padding:18px 16px 34px}.screen{display:none}.screen.active{display:block}.eyebrow{font-size:11px;font-weight:850;letter-spacing:.11em;color:var(--teal-dark);text-transform:uppercase;margin-bottom:4px}
+h1{font-size:31px;line-height:1.08;margin:5px 0 10px}h2{font-size:23px;line-height:1.16;margin:7px 0 8px}h3{margin:5px 0 7px;font-size:18px}.lead{font-size:18px;color:#425a5d;margin:7px 0 12px}.muted{color:var(--muted)}.small{font-size:13px}
+.tip{background:var(--teal-softer);border-radius:14px;padding:12px 13px;margin:12px 0}.prompt{border-left:4px solid var(--gold);padding:10px 12px;background:#fffaf0;margin:10px 0;border-radius:0 10px 10px 0}
+.panel{border:1px solid var(--line);border-radius:17px;padding:14px;margin:12px 0;background:#fff}.panel.compact{padding:11px}
+.btn{width:100%;border:0;border-radius:13px;padding:14px 13px;margin:7px 0;background:var(--teal);color:white;font-size:16px;font-weight:850;cursor:pointer}.btn:disabled{opacity:.35;cursor:default}.btn.secondary{background:white;color:var(--teal-dark);border:1px solid var(--teal)}.btn.ghost{background:var(--teal-softer);color:var(--teal-dark)}.btn.small{padding:10px 11px;font-size:14px}.btn.danger{background:white;color:var(--danger);border:1px solid #d7aaa6}
+.navrow{display:grid;grid-template-columns:1fr 1fr;gap:9px}.navrow.three{grid-template-columns:1fr 1fr 1fr}
+.batch-meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:7px 0;font-size:13px}.counter{font-weight:800;text-align:right}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:9px 0}
+.value-card{min-height:96px;border:1.5px solid #d5dedb;border-radius:14px;background:var(--card);padding:11px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.025);transition:background .12s,border .12s,transform .12s;cursor:pointer;user-select:none}
+.value-card .name{font-size:17px;font-weight:800;line-height:1.12}.value-card .status{font-size:10px;font-weight:900;letter-spacing:.075em;color:#778485;margin-top:7px}
+.value-card.keep{background:linear-gradient(145deg,#d9eeeb,#cce5e1);border-color:#8ebebb;color:#173f40;transform:translateY(-1px);box-shadow:0 5px 15px rgba(36,95,96,.08)}.value-card.keep .status{color:#245f60}
+.value-card.swap{background:#fff8e7;border-color:#d9ad58}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chip{border-radius:999px;background:#edf3f1;padding:6px 9px;font-size:12px}.chip.on{background:var(--teal-soft);color:#224f50;font-weight:700}.chip.warn{background:#fff3d7}
+textarea,input,select{width:100%;border:1px solid #bccdca;border-radius:11px;padding:11px;background:#fff;margin:5px 0 9px;color:var(--ink)}textarea{min-height:90px;resize:vertical}.fieldlabel{display:block;font-size:13px;font-weight:800;margin-top:6px}
+.helpbox{display:none;background:#fffaf0;border-radius:12px;padding:10px;margin:7px 0;font-size:14px}.helpbox.open{display:block}
+.day-row{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid #edf1ef}.day-row:last-child{border-bottom:0}.day-row strong{font-size:14px}.day-row input{margin:0;padding:9px 7px}
+.block{border:1px solid var(--line);border-radius:13px;padding:10px;margin:8px 0;background:#fcfdfc}.block .meta{font-size:12px;color:var(--muted)}
+.daychips{display:flex;gap:5px;flex-wrap:wrap;margin:6px 0}.daychip{border:1px solid #c9d6d3;border-radius:999px;background:white;padding:7px 9px;font-size:12px;color:var(--ink)}.daychip.on{background:var(--teal-soft);border-color:#8ebebb;font-weight:750}
+.checkrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}.checkopt{display:flex;align-items:center;gap:7px;border:1px solid var(--line);padding:9px;border-radius:10px}.checkopt input{width:auto;margin:0}
+.activity-card{border:1px solid var(--line);border-radius:15px;padding:12px;margin:10px 0}.activity-card .meta{font-size:12px;color:var(--muted)}
+.bucket{height:190px;border:4px solid var(--teal);border-top:0;border-radius:0 0 32px 32px;position:relative;overflow:hidden;margin:20px auto;max-width:260px;background:#f7fbfa}.fill{position:absolute;left:0;right:0;bottom:0;background:var(--teal-soft);height:18%;transition:.35s}.bucketlabel{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:18px;font-weight:800;z-index:2}
+.donebox{text-align:center;padding:20px 4px}.big3{display:grid;gap:8px}.bigvalue{background:var(--teal-softer);border:1px solid #b9d8d4;border-radius:15px;padding:14px}.bigvalue strong{font-size:21px}
+footer{padding:17px;text-align:center;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+/* The discovery/narrowing panels are intentionally compact so six cards fit on a typical iPhone without repeated scrolling. */
+.selection-screen main{}.selection-title h1{font-size:26px;margin-bottom:5px}.selection-title .lead{font-size:14px;margin:4px 0 6px}.selection-title .tip{font-size:12px;padding:8px 10px;margin:7px 0}
+@media(max-width:430px){
+  main{padding:12px 12px 28px}.top{padding:7px 12px 6px}.brand{font-size:15px}h1{font-size:28px}.lead{font-size:17px}
+  .cards{gap:7px;margin:7px 0}.value-card{min-height:82px;padding:9px 10px;border-radius:12px}.value-card .name{font-size:15.5px}.value-card .status{font-size:9.5px;margin-top:5px}
+  .selection-title h1{font-size:23px}.selection-title .lead{font-size:13px;line-height:1.25}.selection-title .tip{margin:5px 0;padding:7px 9px}
+  .batch-meta{margin:5px 0;font-size:12px}.btn{padding:12px 11px;margin:5px 0;font-size:15px}.navrow{gap:7px}
+  .day-row{grid-template-columns:.9fr 1fr 1fr}.day-row input{font-size:13px}
+}
+@media(max-height:700px) and (max-width:430px){.value-card{min-height:72px}.value-card .name{font-size:14.5px}.selection-title .tip{display:none}}
+</style>
+</head>
+<body><div class="app">
+<header class="top"><div class="toprow"><div class="brand">Core Values → Full Bucket</div><div class="resume" id="resumeNote">MVP 3</div></div><div class="progress"><div id="progress"></div></div></header>
+<main>
+<section id="welcome" class="screen active">
+  <div class="eyebrow">A guided self-discovery exercise</div>
+  <h1>You spend a lot of your life taking care of what matters.</h1>
+  <p class="lead">This helps you discover what matters to <strong>you</strong> — and make room for what fills your bucket.</p>
+  <div class="tip"><strong>Your answers are not permanent.</strong> These are the values that feel most important in this season of your life.</div>
+  <p>You’ll review every value once. Keep anything that resonates. Later, you’ll positively choose the values you want to carry forward.</p>
+  <button class="btn" onclick="beginDiscovery()">Begin</button>
+  <button class="btn secondary" id="continueBtn" style="display:none" onclick="resumeJourney()">Continue where I left off</button>
+</section>
+
+<section id="discover" class="screen">
+  <div class="selection-title"><div class="eyebrow">Discovery pass</div><h1>What catches your attention?</h1><p class="lead">Keep anything that feels meaningful — even a little. You’ll see every card before moving on.</p><div class="tip"><strong>No quota.</strong> This pass is discovery, not elimination.</div></div>
+  <div class="batch-meta"><span id="discoverProgress"></span><span class="counter" id="discoverKeep"></span></div>
+  <div class="cards" id="discoverCards"></div>
+  <div class="navrow"><button class="btn secondary" id="discBack" onclick="discMove(-1)">Back</button><button class="btn" id="discNext" onclick="discMove(1)">Next 6</button></div>
+</section>
+
+<section id="custom" class="screen">
+  <div class="eyebrow">Before narrowing</div><h1>Is something important missing?</h1>
+  <p class="lead">No list can capture everything that may matter deeply to you. Add a value in your own words if you need to.</p>
+  <div class="panel"><label class="fieldlabel">My own value</label><input id="customInput" placeholder="Example: Pleasing God"><button class="btn small ghost" onclick="addCustomValue()">Add this value</button><div id="customList" class="chips"></div></div>
+  <button class="btn" onclick="finishDiscovery()">Continue to narrowing</button>
+  <button class="btn secondary" onclick="showDiscoveryBatch(Math.ceil(VALUES.length/6)-1)">Back to last six cards</button>
+</section>
+
+<section id="discoveryDone" class="screen">
+  <div class="eyebrow">First pass complete</div><h1>Now choose what rises to the top.</h1>
+  <p class="lead" id="caughtText"></p><div id="caughtChips" class="chips"></div>
+  <div class="tip">Each narrowing round starts with a blank slate. You’ll <strong>affirm what you want to keep</strong>. Once you reach the target, you may continue without reviewing every remaining card.</div>
+  <button class="btn" onclick="startNarrowing()">Start narrowing</button>
+</section>
+
+<section id="narrow" class="screen">
+  <div class="selection-title"><div class="eyebrow" id="narrowEye"></div><h1 id="narrowTitle"></h1><p class="lead" id="narrowLead"></p></div>
+  <div class="batch-meta"><span id="narrowProgress"></span><span class="counter" id="narrowCount"></span></div>
+  <div class="cards" id="narrowCards"></div>
+  <div class="navrow"><button class="btn secondary" id="narBack" onclick="narMove(-1)">Back</button><button class="btn" id="narNext" onclick="narMove(1)">Next 6</button></div>
+  <button class="btn ghost" id="satisfiedBtn" onclick="openLastLook()" disabled>I’m satisfied — continue</button>
+</section>
+
+<section id="lastLook" class="screen">
+  <div class="eyebrow">One last look</div><h1>Anything you wish you had kept?</h1>
+  <p class="lead">These are the values you did <strong>not</strong> carry forward. You do not have to review them all. Scan as much or as little as you want.</p>
+  <div id="swapNotice"></div><div class="cards" id="leftBehindCards"></div>
+  <div id="replacePanel" class="panel" style="display:none"><h3>Bring <span id="incomingName"></span> in</h3><p class="muted">Tap one of your current choices to replace it.</p><div class="cards" id="replaceChoices"></div><button class="btn secondary small" onclick="cancelSwap()">Cancel</button></div>
+  <button class="btn" onclick="lockRound()">Everything looks right — continue</button>
+  <button class="btn secondary" onclick="returnToNarrow()">Go back to my selections</button>
+</section>
+
+<section id="final" class="screen">
+  <div class="eyebrow">Your three — right now</div><h1>These rose to the top.</h1>
+  <p class="lead">They are not a permanent label. They are the three values that feel most central in this season of your life.</p>
+  <div id="finalValues" class="big3"></div>
+  <div class="tip">You can stop here and still have completed the core-values exercise.</div>
+  <button class="btn secondary" onclick="finishAtThree()">Save my three — I’m finished for now</button>
+  <button class="btn" onclick="renderDefinitions();show('define')">Help me put them into practice</button>
+  <button class="btn ghost" onclick="reconsiderFinal()">Something doesn’t fit</button>
+</section>
+
+<section id="threeDone" class="screen">
+  <div class="donebox"><div class="eyebrow">Core values identified</div><h1>Your three are saved.</h1><div id="savedThree" class="big3"></div><p class="lead">Come back whenever you want to explore how your real life supports what matters to you.</p><button class="btn" onclick="renderDefinitions();show('define')">Continue deeper now</button><button class="btn secondary" onclick="show('final')">Back to my three</button></div>
+</section>
+
+<section id="define" class="screen">
+  <div class="eyebrow">Make them yours</div><h1>What do these values mean to you?</h1>
+  <p class="lead">The general descriptions are only reference points. Your meaning is what matters.</p><div id="defineBox"></div>
+  <button class="btn" onclick="saveDefinitions()">Continue to my real week</button>
+</section>
+
+<section id="timeIntro" class="screen">
+  <div class="eyebrow">Reality before aspiration</div><h1>What parts of your week are already spoken for?</h1>
+  <p class="lead">Before deciding what you <em>could</em> do, sketch what you already do. We only need broad blocks — not a minute-by-minute calendar.</p>
+  <div class="tip">This should take only a few minutes. Messy is fine. We are looking for reality, not a perfect schedule.</div>
+  <button class="btn" onclick="renderDayBounds();show('dayBounds')">Start with my day</button>
+</section>
+
+<section id="dayBounds" class="screen">
+  <div class="eyebrow">My normal day</div><h1>When does each day usually begin and end?</h1>
+  <p class="lead">These limits keep us from asking about hours when you are normally asleep.</p>
+  <div class="panel compact"><div class="day-row"><strong>Day</strong><strong>Start</strong><strong>End</strong></div><div id="dayBoundsBox"></div></div>
+  <button class="btn ghost small" onclick="copyMonday()">Copy Monday’s times to every day</button>
+  <button class="btn" onclick="saveDayBounds()">Next: my regular commitments</button>
+</section>
+
+<section id="commitments" class="screen">
+  <div class="eyebrow">Broad time blocks</div><h1>What already takes your time?</h1>
+  <p class="lead">Add the big, predictable pieces. Enter a repeating activity once and tell us when it repeats.</p>
+  <div class="panel">
+    <label class="fieldlabel">Category</label><select id="blockCategory"></select>
+    <label class="fieldlabel">Optional description</label><input id="blockLabel" placeholder="Example: Work at the shop">
+    <div class="navrow"><div><label class="fieldlabel">Starts</label><input type="time" id="blockStart" value="08:00"></div><div><label class="fieldlabel">Ends</label><input type="time" id="blockEnd" value="17:00"></div></div>
+    <label class="fieldlabel">How often?</label><select id="blockRepeat" onchange="renderRepeatDays()"><option value="weekdays">Weekdays</option><option value="daily">Every day</option><option value="weekends">Weekends</option><option value="once">Once a week</option><option value="custom">Choose days</option></select>
+    <div id="repeatDays"></div><button class="btn small ghost" onclick="addBlock()">Add this time block</button>
+  </div>
+  <div id="blockList"></div>
+  <button class="btn" onclick="saveBlocksAndContinue()">That’s enough — show me what’s open</button>
+</section>
+
+<section id="openings" class="screen">
+  <div class="eyebrow">Your week as it is</div><h1>These are your larger open spaces.</h1>
+  <p class="lead">We have not added anything new. This is simply the time left around the blocks you entered.</p>
+  <div id="openingsBox"></div>
+  <button class="btn" onclick="renderActivityBuilder();show('activities')">Now identify what supports my values</button>
+  <button class="btn secondary" onclick="show('commitments')">Adjust my time blocks</button>
+</section>
+
+<section id="activities" class="screen">
+  <div class="eyebrow">What genuinely supports you?</div><h1>Build your activity library.</h1>
+  <p class="lead">One activity can support more than one value. Use your own experience, not what you think you “should” do.</p>
+  <div class="panel">
+    <label class="fieldlabel">Activity</label><input id="actName" placeholder="Example: Sit by the lake and read">
+    <button class="btn ghost small" onclick="toggleHelp('actHelp')">Help me think</button>
+    <div class="helpbox" id="actHelp">Think about people, places, music, nature, movement, creativity, learning, service, spirituality, quiet or recreation. What has actually helped before?</div>
+    <label class="fieldlabel">Which core value(s) does this support?</label><div id="actValues" class="checkrow"></div>
+    <label class="fieldlabel">What would you actually do?</label><input id="actDetail" placeholder="Example: Bring a chair, sit on the dock, read my Bible">
+    <label class="fieldlabel">Minimum worthwhile experience</label><select id="actBenefit"></select>
+    <p class="small muted">What is the least amount of actual experience that makes this worthwhile for you?</p>
+    <label class="fieldlabel">Real total time to allow</label><select id="actTotal"></select>
+    <p class="small muted">Include preparation, travel, setup, cleanup and getting back home when they apply.</p>
+    <label class="fieldlabel">How often would you like this in your life?</label><select id="actFreq"><option value="daily">Most days</option><option value="2xweek">About twice a week</option><option value="weekly">About once a week</option><option value="2xmonth">A couple times a month</option><option value="monthly">About once a month</option><option value="occasionally">Occasionally</option></select>
+    <button class="btn small ghost" onclick="addActivity()">Add this activity</button>
+  </div>
+  <div id="activityList"></div>
+  <button class="btn" id="activityContinue" onclick="renderMatches();show('matches')">Compare these with my real week</button>
+</section>
+
+<section id="matches" class="screen">
+  <div class="eyebrow">Reality check</div><h1>Where could these truthfully fit?</h1>
+  <p class="lead">We only suggest openings large enough for the <strong>real total time</strong> you said the activity requires.</p>
+  <div id="matchesBox"></div>
+  <button class="btn" onclick="renderPlan();show('plan')">Review my protected time</button>
+  <button class="btn secondary" onclick="show('activities')">Adjust my activities</button>
+</section>
+
+<section id="plan" class="screen">
+  <div class="eyebrow">My Bucket Plan</div><h1>Protect some time for what matters.</h1>
+  <p class="lead">These are choices, not obligations. You can leave an activity unscheduled if the right opening does not exist.</p><div id="planBox"></div>
+  <button class="btn" onclick="renderDashboard();show('dashboard')">Save my Bucket Plan</button>
+</section>
+
+<section id="dashboard" class="screen">
+  <div class="eyebrow">Your bucket</div><h1>Notice what replenishes you.</h1><p class="muted">This is a reflection, not a clinical score or a streak.</p>
+  <div class="bucket"><div class="fill" id="bucketFill"></div><div class="bucketlabel">What has been filling my bucket lately?</div></div>
+  <div id="todayPlan"></div><button class="btn" onclick="renderCheckin();show('checkin')">Check in</button><button class="btn secondary" onclick="renderMap();show('map')">See my values map</button>
+</section>
+
+<section id="checkin" class="screen"><div class="eyebrow">Gentle check-in</div><h1>What happened?</h1><div id="checkinBox"></div><button class="btn secondary" onclick="show('dashboard')">Back</button></section>
+<section id="reflect" class="screen"><div class="eyebrow">Useful information</div><h1>Notice, don’t judge.</h1><div id="reflectBox"></div><button class="btn" onclick="renderDashboard();show('dashboard')">Back to my bucket</button></section>
+<section id="map" class="screen"><div class="eyebrow">My values map</div><h1>What matters and what supports it.</h1><div id="mapBox"></div><button class="btn" onclick="show('dashboard')">Back to my bucket</button></section>
+
+<section id="reset" class="screen"><div class="eyebrow">Start over</div><h1>Reset this prototype?</h1><p>This clears only the MVP3 information saved in this browser.</p><button class="btn danger" onclick="hardReset()">Yes — reset MVP3</button><button class="btn secondary" onclick="resumeJourney()">Cancel</button></section>
+</main>
+<footer>Core Values → Full Bucket • MVP 3 • Self-reflection and personal planning, not therapy or medical care. <button style="border:0;background:none;color:#667679;text-decoration:underline" onclick="show('reset')">Reset</button></footer>
+</div>
+<script>
+const VALUES=["Acceptance","Adventure","Authenticity","Beauty","Belonging","Calm","Challenge","Community","Compassion","Connection","Contentment","Contribution","Courage","Creativity","Curiosity","Dependability","Discipline","Discovery","Education","Efficiency","Equality","Excellence","Family","Faith","Financial Security","Freedom","Friendship","Fun","Generosity","Growth","Health","Honesty","Hope","Humility","Independence","Inner Peace","Integrity","Joy","Justice","Kindness","Knowledge","Leadership","Learning","Loyalty","Love","Meaning","Music","Nature","Open-mindedness","Order","Patience","Peace","Personal Growth","Play","Pleasure","Privacy","Purpose","Reliability","Respect","Responsibility","Safety","Self-Discipline","Self-Expression","Self-Respect","Service","Simplicity","Spirituality","Stability","Stillness","Strength","Success","Support","Teaching","Tradition","Trust","Truth","Understanding","Variety","Vitality","Wisdom","Wonder","Work","Pleasing God"];
+const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const SHORT={Monday:"Mon",Tuesday:"Tue",Wednesday:"Wed",Thursday:"Thu",Friday:"Fri",Saturday:"Sat",Sunday:"Sun"};
+const CATEGORIES=["Work","School","Commute / travel","Meals / meal prep","Personal care / getting ready","Child care / school prep","Caregiving","Household chores / laundry","Errands / shopping","Exercise","Community / volunteer","Worship / spiritual commitments","Appointments","Vehicle / home maintenance","Yard work","Homework / study","Recreation / downtime","Other"];
+const DURATIONS=[[10,"10 minutes"],[15,"15 minutes"],[30,"30 minutes"],[45,"45 minutes"],[60,"1 hour"],[90,"1½ hours"],[120,"2 hours"],[180,"3 hours"],[240,"4 hours"],[300,"5 hours"],[360,"6 hours"],[480,"8 hours"]];
+const GENERIC={
+  "Inner Peace":"a felt sense of calm, steadiness and freedom from inner turmoil",
+  "Faith":"trust in spiritual beliefs, God, or a larger source of meaning",
+  "Spirituality":"connection with the sacred, transcendent, or a deeper sense of meaning",
+  "Pleasing God":"living in a way that aligns with your understanding of God’s will and teachings",
+  "Family":"placing importance on close family relationships, care and belonging",
+  "Love":"giving and receiving deep care, affection and commitment",
+  "Freedom":"having meaningful choice, autonomy and room to direct your own life",
+  "Service":"using your time or abilities to benefit other people or a cause",
+  "Purpose":"living with a sense that your efforts point toward something meaningful",
+  "Health":"caring for physical and emotional well-being in ways that matter to you",
+  "Music":"valuing musical experience, expression, listening or participation",
+  "Nature":"valuing connection with the natural world",
+  "Community":"belonging to and contributing to a group, place or shared life",
+  "Creativity":"making, imagining or expressing something in an original way",
+  "Growth":"continuing to develop, mature or expand your abilities and understanding"
+};
+const KEY="core_values_full_bucket_mvp3";
+let state=load();
+let discPage=state.discPage||0,narPage=state.narPage||0,swapIncoming=null;
+function fresh(){return{screen:"welcome",discovery:{},discPage:0,custom:[],pool:[],roundTarget:null,roundPool:[],roundSelected:[],roundHistory:[],final:[],definitions:{},dayBounds:{},blocks:[],activities:[],plan:[],checkins:[],repeatDays:["Monday"]}}
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));return x&&x.final!==undefined?Object.assign(fresh(),x):fresh()}catch(e){return fresh()}}
+function save(){state.discPage=discPage;state.narPage=narPage;localStorage.setItem(KEY,JSON.stringify(state));updateResume()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function q(s){return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'")}
+function updateResume(){const has=state.screen&&state.screen!=="welcome";document.getElementById("continueBtn").style.display=has?"block":"none";document.getElementById("resumeNote").textContent=has?"Saved on this device":"MVP 3"}
+const PROGRESS={welcome:0,discover:10,custom:18,discoveryDone:22,narrow:32,lastLook:42,final:50,threeDone:50,define:58,timeIntro:64,dayBounds:70,commitments:76,openings:80,activities:86,matches:91,plan:95,dashboard:100,checkin:100,reflect:100,map:100,reset:100};
+function show(id,noScroll=false){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));const el=document.getElementById(id);if(el)el.classList.add("active");document.getElementById("progress").style.width=(PROGRESS[id]||0)+"%";state.screen=id;save();if(!noScroll)window.scrollTo(0,0)}
+function resumeJourney(){renderScreen(state.screen||"welcome")}
+function renderScreen(id){if(id==="discover")showDiscoveryBatch(discPage);else if(id==="custom"){renderCustom();show("custom")}else if(id==="discoveryDone"){renderDiscoveryDone();show(id)}else if(id==="narrow")renderNarrow();else if(id==="lastLook")openLastLook();else if(id==="final"){renderFinal();show(id)}else if(id==="threeDone"){renderSavedThree();show(id)}else if(id==="define"){renderDefinitions();show(id)}else if(id==="timeIntro")show(id);else if(id==="dayBounds"){renderDayBounds();show(id)}else if(id==="commitments"){renderBlockForm();renderBlocks();show(id)}else if(id==="openings"){renderOpenings();show(id)}else if(id==="activities"){renderActivityBuilder();show(id)}else if(id==="matches"){renderMatches();show(id)}else if(id==="plan"){renderPlan();show(id)}else if(id==="dashboard"){renderDashboard();show(id)}else if(id==="checkin"){renderCheckin();show(id)}else if(id==="map"){renderMap();show(id)}else show(id||"welcome")}
+function beginDiscovery(){state=fresh();discPage=0;narPage=0;save();showDiscoveryBatch(0)}
+function cardHTML(v,on,fn){return `<button type="button" class="value-card ${on?"keep":""}" data-value="${esc(v)}" onclick="${fn}('${q(v)}',this)"><span class="name">${esc(v)}</span><span class="status">${on?"✓ KEEP":"NOT NOW"}</span></button>`}
+function showDiscoveryBatch(p){const pages=Math.ceil(VALUES.length/6);discPage=Math.max(0,Math.min(p,pages-1));state.discPage=discPage;const start=discPage*6,b=VALUES.slice(start,start+6);document.getElementById("discoverCards").innerHTML=b.map(v=>cardHTML(v,!!state.discovery[v],"toggleDisc")).join("");document.getElementById("discoverProgress").textContent=`${start+1}–${start+b.length} of ${VALUES.length}`;updateDiscCount();document.getElementById("discBack").disabled=discPage===0;document.getElementById("discNext").textContent=discPage===pages-1?"I reviewed every card":"Next 6";show("discover")}
+function updateDiscCount(){document.getElementById("discoverKeep").textContent=`${Object.values(state.discovery).filter(Boolean).length} kept`}
+function toggleDisc(v,el){state.discovery[v]=!state.discovery[v];el.classList.toggle("keep",!!state.discovery[v]);el.querySelector(".status").textContent=state.discovery[v]?"✓ KEEP":"NOT NOW";updateDiscCount();save()}
+function discMove(d){const pages=Math.ceil(VALUES.length/6);if(d>0&&discPage===pages-1){const n=VALUES.filter(v=>state.discovery[v]).length;if(n<3){alert("Keep at least three values before moving on.");return}renderCustom();show("custom");return}showDiscoveryBatch(discPage+d)}
+function renderCustom(){document.getElementById("customList").innerHTML=(state.custom||[]).map((v,i)=>`<span class="chip on">${esc(v)} <button aria-label="Remove" onclick="removeCustom(${i})" style="border:0;background:none;color:inherit;font-weight:900">×</button></span>`).join("")}
+function addCustomValue(){const inp=document.getElementById("customInput"),v=inp.value.trim();if(!v)return;if(VALUES.some(x=>x.toLowerCase()===v.toLowerCase())||(state.custom||[]).some(x=>x.toLowerCase()===v.toLowerCase())){alert("That value is already in your list.");return}state.custom.push(v);inp.value="";save();renderCustom()}
+function removeCustom(i){state.custom.splice(i,1);save();renderCustom()}
+function finishDiscovery(){state.pool=VALUES.filter(v=>state.discovery[v]).concat(state.custom||[]);if(state.pool.length<3){alert("You need at least three values to continue.");return}renderDiscoveryDone();show("discoveryDone")}
+function renderDiscoveryDone(){document.getElementById("caughtText").textContent=`${state.pool.length} values caught your attention. That is fine — the first pass was not supposed to be restrictive.`;document.getElementById("caughtChips").innerHTML=state.pool.map(v=>`<span class="chip on">${esc(v)}</span>`).join("")}
+function nextTarget(n){if(n>40)return 40;if(n>20)return 20;if(n>10)return 10;return 3}
+function startNarrowing(){state.roundPool=state.pool.slice();state.roundTarget=nextTarget(state.roundPool.length);state.roundSelected=[];narPage=0;state.narPage=0;save();renderNarrow()}
+function renderNarrow(){const pool=state.roundPool,t=state.roundTarget,pages=Math.max(1,Math.ceil(pool.length/6));narPage=Math.max(0,Math.min(narPage,pages-1));const start=narPage*6,b=pool.slice(start,start+6),sel=new Set(state.roundSelected);document.getElementById("narrowEye").textContent=`Choose ${t} from ${pool.length}`;document.getElementById("narrowTitle").textContent=t===3?"Which three feel most central right now?":`Which ${t} do you want to carry forward?`;document.getElementById("narrowLead").textContent="This round starts blank. Positively choose what still feels most important. You may stop once you reach the target.";document.getElementById("narrowCards").innerHTML=b.map(v=>cardHTML(v,sel.has(v),"toggleNarrow")).join("");document.getElementById("narrowProgress").textContent=`${start+1}–${start+b.length} of ${pool.length}`;updateNarCount();document.getElementById("narBack").disabled=narPage===0;document.getElementById("narNext").disabled=narPage===pages-1;document.getElementById("narNext").textContent="Next 6";document.getElementById("satisfiedBtn").disabled=state.roundSelected.length!==t;show("narrow")}
+function updateNarCount(){document.getElementById("narrowCount").textContent=`${state.roundSelected.length} of ${state.roundTarget} chosen`;document.getElementById("satisfiedBtn").disabled=state.roundSelected.length!==state.roundTarget}
+function toggleNarrow(v,el){const i=state.roundSelected.indexOf(v);if(i>=0){state.roundSelected.splice(i,1);el.classList.remove("keep");el.querySelector(".status").textContent="NOT NOW"}else{if(state.roundSelected.length>=state.roundTarget){alert(`You already chose ${state.roundTarget}. Deselect one first, or continue to One Last Look.`);return}state.roundSelected.push(v);el.classList.add("keep");el.querySelector(".status").textContent="✓ KEEP"}updateNarCount();save()}
+function narMove(d){narPage=Math.max(0,narPage+d);state.narPage=narPage;save();renderNarrow()}
+function returnToNarrow(){swapIncoming=null;renderNarrow()}
+function openLastLook(){if(state.roundSelected.length!==state.roundTarget)return;swapIncoming=null;const left=state.roundPool.filter(v=>!state.roundSelected.includes(v));document.getElementById("leftBehindCards").innerHTML=left.length?left.map(v=>`<button type="button" class="value-card" onclick="startSwap('${q(v)}')"><span class="name">${esc(v)}</span><span class="status">TAP TO RECONSIDER</span></button>`).join(""):`<div class="tip">There are no values left behind in this round.</div>`;document.getElementById("replacePanel").style.display="none";document.getElementById("swapNotice").innerHTML=`<div class="tip"><strong>Your ${state.roundTarget} are selected.</strong> This is only a safeguard in case something you passed over now jumps out at you.</div>`;show("lastLook")}
+function startSwap(v){swapIncoming=v;document.getElementById("incomingName").textContent=v;document.getElementById("replaceChoices").innerHTML=state.roundSelected.map(x=>`<button type="button" class="value-card keep" onclick="completeSwap('${q(x)}')"><span class="name">${esc(x)}</span><span class="status">REPLACE THIS</span></button>`).join("");document.getElementById("replacePanel").style.display="block";document.getElementById("replacePanel").scrollIntoView({behavior:"smooth",block:"start"})}
+function completeSwap(outgoing){const i=state.roundSelected.indexOf(outgoing);if(i>=0&&swapIncoming){state.roundSelected[i]=swapIncoming;save();openLastLook()}}
+function cancelSwap(){swapIncoming=null;document.getElementById("replacePanel").style.display="none"}
+function lockRound(){const selected=state.roundSelected.slice();state.roundHistory.push({target:state.roundTarget,pool:state.roundPool.slice(),selected:selected.slice()});if(state.roundTarget===3){state.final=selected;state.pool=selected;save();renderFinal();show("final");return}state.pool=selected;state.roundPool=selected.slice();state.roundTarget=nextTarget(selected.length);state.roundSelected=[];narPage=0;save();renderNarrow()}
+function generic(v){return GENERIC[v]||`placing importance on ${v.toLowerCase()} in the way you live, choose and relate to the world`}
+function renderFinal(){document.getElementById("finalValues").innerHTML=state.final.map(v=>`<div class="bigvalue"><strong>${esc(v)}</strong><div class="small muted">Commonly: ${esc(generic(v))}.</div></div>`).join("")}
+function finishAtThree(){renderSavedThree();show("threeDone")}
+function renderSavedThree(){document.getElementById("savedThree").innerHTML=state.final.map(v=>`<div class="bigvalue"><strong>${esc(v)}</strong></div>`).join("")}
+function reconsiderFinal(){const last=state.roundHistory[state.roundHistory.length-1];if(!last)return;state.roundPool=last.pool.slice();state.roundTarget=3;state.roundSelected=state.final.slice();narPage=0;save();renderNarrow()}
+function renderDefinitions(){document.getElementById("defineBox").innerHTML=state.final.map(v=>{const arr=Array.isArray(state.definitions[v])?state.definitions[v]:(state.definitions[v]?[state.definitions[v]]:[""]);return `<div class="panel"><h2>${esc(v)}</h2><p class="small muted">Commonly: ${esc(generic(v))}.</p><p><strong>When you chose this, what were you thinking about? What would more of it look like in your life?</strong></p><button class="btn ghost small" onclick="toggleHelp('help_${safeId(v)}')">Help me think</button><div class="helpbox" id="help_${safeId(v)}">Think of a real time this value felt present. Where were you? Who was there? What were you doing? What would you notice if there were more of this in your life?</div><div id="thoughts_${safeId(v)}">${arr.map((t,i)=>`<textarea data-def="${esc(v)}" data-i="${i}" placeholder="You can type or use your keyboard microphone.">${esc(t)}</textarea>`).join("")}</div><button class="btn secondary small" onclick="addThought('${q(v)}')">Add another thought</button></div>`}).join("")}
+function safeId(s){return String(s).replace(/[^a-z0-9]/gi,"_")}
+function toggleHelp(id){document.getElementById(id)?.classList.toggle("open")}
+function captureDefinitions(){state.final.forEach(v=>{state.definitions[v]=Array.from(document.querySelectorAll(`[data-def="${cssEsc(v)}"]`)).map(x=>x.value.trim()).filter(Boolean)});save()}
+function addThought(v){captureDefinitions();if(!state.definitions[v])state.definitions[v]=[];if(state.definitions[v].length>=4){alert("Four thoughts is enough for this prototype.");return}state.definitions[v].push("");save();renderDefinitions()}
+function cssEsc(s){return window.CSS&&CSS.escape?CSS.escape(s):String(s).replace(/(["\\])/g,"\\$1")}
+function saveDefinitions(){captureDefinitions();renderDayBounds();show("timeIntro")}
+function defaultBounds(){return{start:"07:00",end:"22:00"}}
+function renderDayBounds(){document.getElementById("dayBoundsBox").innerHTML=DAYS.map(d=>{const b=state.dayBounds[d]||defaultBounds();return `<div class="day-row"><strong>${d}</strong><input type="time" data-daystart="${d}" value="${b.start}"><input type="time" data-dayend="${d}" value="${b.end}"></div>`}).join("")}
+function copyMonday(){const s=document.querySelector('[data-daystart="Monday"]').value,e=document.querySelector('[data-dayend="Monday"]').value;DAYS.forEach(d=>{document.querySelector(`[data-daystart="${d}"]`).value=s;document.querySelector(`[data-dayend="${d}"]`).value=e})}
+function saveDayBounds(){DAYS.forEach(d=>state.dayBounds[d]={start:document.querySelector(`[data-daystart="${d}"]`).value||"07:00",end:document.querySelector(`[data-dayend="${d}"]`).value||"22:00"});save();renderBlockForm();renderBlocks();show("commitments")}
+function renderBlockForm(){document.getElementById("blockCategory").innerHTML=CATEGORIES.map(c=>`<option>${esc(c)}</option>`).join("");renderRepeatDays()}
+function repeatToDays(type){if(type==="daily")return DAYS.slice();if(type==="weekdays")return DAYS.slice(0,5);if(type==="weekends")return DAYS.slice(5);return (state.repeatDays&&state.repeatDays.length?state.repeatDays:["Monday"]).slice()}
+function renderRepeatDays(){const type=document.getElementById("blockRepeat")?.value||"weekdays";const box=document.getElementById("repeatDays");if(!box)return;if(type==="once"||type==="custom"){if(!state.repeatDays?.length)state.repeatDays=["Monday"];box.innerHTML=`<div class="daychips">${DAYS.map(d=>`<button type="button" class="daychip ${state.repeatDays.includes(d)?"on":""}" onclick="toggleRepeatDay('${d}',${type==="once"})">${SHORT[d]}</button>`).join("")}</div><div class="small muted">${type==="once"?"Choose one day.":"Choose every day this block usually happens."}</div>`}else box.innerHTML=""}
+function toggleRepeatDay(d,once){if(once)state.repeatDays=[d];else{const i=state.repeatDays.indexOf(d);if(i>=0)state.repeatDays.splice(i,1);else state.repeatDays.push(d);if(!state.repeatDays.length)state.repeatDays=[d]}renderRepeatDays()}
+function addBlock(){const cat=document.getElementById("blockCategory").value,label=document.getElementById("blockLabel").value.trim(),start=document.getElementById("blockStart").value,end=document.getElementById("blockEnd").value,type=document.getElementById("blockRepeat").value;if(!start||!end||toMin(end)<=toMin(start)){alert("Choose an end time later than the start time.");return}let days=repeatToDays(type);if(type==="once"&&days.length>1)days=[days[0]];state.blocks.push({id:Date.now()+Math.random(),category:cat,label,start,end,days});document.getElementById("blockLabel").value="";save();renderBlocks()}
+function renderBlocks(){const box=document.getElementById("blockList");if(!box)return;box.innerHTML=state.blocks.length?`<h3>Time already spoken for</h3>`+state.blocks.map((b,i)=>`<div class="block"><strong>${esc(b.category)}${b.label?" — "+esc(b.label):""}</strong><div class="meta">${fmtTime(b.start)}–${fmtTime(b.end)} • ${b.days.map(d=>SHORT[d]).join(", ")}</div><button class="btn secondary small" onclick="removeBlock(${i})">Remove</button></div>`).join(""):`<div class="tip">Nothing added yet. Add only the large, predictable parts of your week.</div>`}
+function removeBlock(i){state.blocks.splice(i,1);save();renderBlocks()}
+function saveBlocksAndContinue(){save();renderOpenings();show("openings")}
+function toMin(t){const [h,m]=String(t).split(":").map(Number);return h*60+m}
+function minToTime(n){n=((n%1440)+1440)%1440;return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}
+function fmtTime(t){const [h,m]=t.split(":").map(Number),ap=h>=12?"PM":"AM",hh=h%12||12;return `${hh}:${String(m).padStart(2,"0")} ${ap}`}
+function openingsForDay(d){const b=state.dayBounds[d]||defaultBounds(),start=toMin(b.start),end=toMin(b.end);if(end<=start)return[];let blocks=state.blocks.filter(x=>x.days.includes(d)).map(x=>[Math.max(start,toMin(x.start)),Math.min(end,toMin(x.end))]).filter(x=>x[1]>x[0]).sort((a,b)=>a[0]-b[0]);let merged=[];for(const r of blocks){if(!merged.length||r[0]>merged[merged.length-1][1])merged.push(r.slice());else merged[merged.length-1][1]=Math.max(merged[merged.length-1][1],r[1])}let out=[],cur=start;for(const r of merged){if(r[0]>cur)out.push([cur,r[0]]);cur=Math.max(cur,r[1])}if(cur<end)out.push([cur,end]);return out.filter(x=>x[1]-x[0]>=15)}
+function renderOpenings(){document.getElementById("openingsBox").innerHTML=DAYS.map(d=>{const ops=openingsForDay(d);return `<div class="panel compact"><h3>${d}</h3>${ops.length?ops.map(o=>`<span class="chip">${fmtTime(minToTime(o[0]))}–${fmtTime(minToTime(o[1]))} • ${prettyMinutes(o[1]-o[0])}</span>`).join(" "):`<span class="muted small">No open block of 15+ minutes based on what you entered.</span>`}</div>`}).join("")}
+function durationOptions(){return DURATIONS.map(([v,l])=>`<option value="${v}">${l}</option>`).join("")}
+function renderActivityBuilder(){document.getElementById("actValues").innerHTML=state.final.map(v=>`<label class="checkopt"><input type="checkbox" name="actVal" value="${esc(v)}"> <span>${esc(v)}</span></label>`).join("");document.getElementById("actBenefit").innerHTML=durationOptions();document.getElementById("actTotal").innerHTML=durationOptions();document.getElementById("actBenefit").value="30";document.getElementById("actTotal").value="60";renderActivitiesList();document.getElementById("activityContinue").disabled=!state.activities.length}
+function addActivity(){const name=document.getElementById("actName").value.trim(),values=Array.from(document.querySelectorAll('input[name="actVal"]:checked')).map(x=>x.value),detail=document.getElementById("actDetail").value.trim(),benefit=+document.getElementById("actBenefit").value,total=+document.getElementById("actTotal").value,freq=document.getElementById("actFreq").value;if(!name||!values.length){alert("Give the activity a name and connect it to at least one of your core values.");return}if(total<benefit){alert("The real total time should be at least as long as the minimum worthwhile experience.");return}state.activities.push({id:Date.now()+Math.random(),name,values,detail,benefit,total,freq});save();document.getElementById("actName").value="";document.getElementById("actDetail").value="";document.querySelectorAll('input[name="actVal"]').forEach(x=>x.checked=false);renderActivitiesList();document.getElementById("activityContinue").disabled=false}
+function renderActivitiesList(){const box=document.getElementById("activityList");if(!box)return;box.innerHTML=state.activities.length?`<h3>My activity library</h3>`+state.activities.map((a,i)=>`<div class="activity-card"><strong>${esc(a.name)}</strong><div class="chips">${a.values.map(v=>`<span class="chip on">${esc(v)}</span>`).join("")}</div>${a.detail?`<div>${esc(a.detail)}</div>`:""}<div class="meta">Minimum worthwhile: ${prettyMinutes(a.benefit)} • Real time needed: ${prettyMinutes(a.total)} • ${freqLabel(a.freq)}</div><button class="btn secondary small" onclick="removeActivity(${i})">Remove</button></div>`).join(""):`<div class="tip">Add at least one activity that you know or suspect genuinely supports one of your values.</div>`}
+function removeActivity(i){state.activities.splice(i,1);save();renderActivitiesList();document.getElementById("activityContinue").disabled=!state.activities.length}
+function prettyMinutes(n){if(n<60)return `${n} min`;if(n%60===0)return `${n/60} hr${n===60?"":"s"}`;return `${Math.floor(n/60)} hr ${n%60} min`}
+function freqLabel(f){return({"daily":"Most days","2xweek":"About twice a week","weekly":"About once a week","2xmonth":"A couple times a month","monthly":"About once a month","occasionally":"Occasionally"})[f]||f}
+function candidateOpenings(activity){let out=[];DAYS.forEach(d=>openingsForDay(d).forEach(o=>{if(o[1]-o[0]>=activity.total)out.push({day:d,start:o[0],end:o[1],available:o[1]-o[0]})}));return out}
+function renderMatches(){document.getElementById("matchesBox").innerHTML=state.activities.map((a,i)=>{const ops=candidateOpenings(a);return `<div class="panel"><h2>${esc(a.name)}</h2><div class="chips">${a.values.map(v=>`<span class="chip on">${esc(v)}</span>`).join("")}</div><p class="small">You said this realistically needs <strong>${prettyMinutes(a.total)}</strong>.</p>${ops.length?`<label class="fieldlabel">Choose protected time (optional)</label><select data-match="${i}"><option value="">Not scheduling this yet</option>${ops.slice(0,20).map(o=>`<option value="${o.day}|${o.start}|${o.end}">${o.day} • ${fmtTime(minToTime(o.start))}–${fmtTime(minToTime(o.start+a.total))} (inside a ${prettyMinutes(o.available)} opening)</option>`).join("")}</select>`:`<div class="prompt"><strong>No truthful fit found in the week you mapped.</strong><br>That is useful information, not failure. You can keep the activity without scheduling it, choose a smaller supporting activity, or later change an existing commitment.</div>`}</div>`}).join("");document.querySelectorAll("[data-match]").forEach(sel=>{const i=+sel.dataset.match,p=state.plan.find(x=>x.activityId===state.activities[i].id);if(p)sel.value=`${p.day}|${p.start}|${p.openEnd}`;sel.addEventListener("change",()=>saveMatch(i,sel.value))})}
+function saveMatch(i,val){const a=state.activities[i];state.plan=state.plan.filter(x=>x.activityId!==a.id);if(val){const [day,start,end]=val.split("|").map((x,j)=>j?+x:x);state.plan.push({activityId:a.id,day,start,openEnd:end,minutes:a.total})}save()}
+function renderPlan(){document.getElementById("planBox").innerHTML=state.plan.length?state.plan.map(p=>{const a=state.activities.find(x=>x.id===p.activityId);if(!a)return"";return `<div class="panel"><h2>${esc(a.name)}</h2><div class="chips">${a.values.map(v=>`<span class="chip on">${esc(v)}</span>`).join("")}</div><p><strong>${p.day}</strong> • ${fmtTime(minToTime(p.start))}–${fmtTime(minToTime(p.start+p.minutes))}</p><p class="small muted">Protected time: ${prettyMinutes(p.minutes)} • ${freqLabel(a.freq)}</p></div>`}).join(""):`<div class="tip">You chose not to schedule anything yet. That is allowed. Your values and activity library are still saved.</div>`}
+function renderDashboard(){const helped=state.checkins.filter(c=>c.result==="helped").length,pct=state.checkins.length?Math.min(82,18+helped*13):18;document.getElementById("bucketFill").style.height=pct+"%";document.getElementById("todayPlan").innerHTML=`<div class="panel"><h2>My protected time</h2>${state.plan.length?state.plan.map(p=>{const a=state.activities.find(x=>x.id===p.activityId);return a?`<div class="activity-card"><strong>${esc(p.day)} • ${esc(a.name)}</strong><div class="small muted">${fmtTime(minToTime(p.start))}–${fmtTime(minToTime(p.start+p.minutes))} • ${a.values.map(esc).join(" + ")}</div></div>`:""}).join(""):`<p class="muted">Nothing is scheduled yet. That can be adjusted anytime.</p>`}</div>`}
+function renderCheckin(){document.getElementById("checkinBox").innerHTML=state.plan.length?state.plan.map((p,i)=>{const a=state.activities.find(x=>x.id===p.activityId);if(!a)return"";return `<div class="panel"><h3>${esc(a.name)}</h3><p>${esc(p.day)} • ${a.values.map(esc).join(" + ")}</p><button class="btn small" onclick="check(${i},'helped')">I did it — it helped</button><button class="btn secondary small" onclick="check(${i},'nohelp')">I did it — it didn’t really help</button><button class="btn secondary small" onclick="check(${i},'missed')">Not this time</button></div>`}).join(""):`<div class="tip">There is no protected activity to check in on yet.</div>`}
+function check(i,result){const p=state.plan[i],a=state.activities.find(x=>x.id===p.activityId);if(!a)return;state.checkins.push({activityId:a.id,result,date:new Date().toISOString()});save();let msg=result==="helped"?`You noticed that <strong>${esc(a.name)}</strong> supported ${a.values.map(v=>`<strong>${esc(v)}</strong>`).join(" and ")}. That is useful evidence from your own life.`:result==="nohelp"?`You made time for <strong>${esc(a.name)}</strong>, but it did not seem to help this time. That is a reason to stay curious, not to force it.`:`You did not get to <strong>${esc(a.name)}</strong>. Was the timing unrealistic, was the real time requirement larger than expected, or did something else matter more?`;document.getElementById("reflectBox").innerHTML=`<div class="tip">${msg}</div><p>Use what happened to adjust the activity or the protected time later.</p>`;show("reflect")}
+function renderMap(){document.getElementById("mapBox").innerHTML=state.final.map(v=>`<div class="panel"><h2>${esc(v)}</h2><p><strong>What it means to me</strong><br>${(state.definitions[v]||[]).length?(state.definitions[v]||[]).map(esc).join("<br>"):"<span class='muted'>Not written yet</span>"}</p><p><strong>Activities I connected to it</strong></p>${state.activities.filter(a=>a.values.includes(v)).map(a=>`<div class="chip on">${esc(a.name)} • ${prettyMinutes(a.total)}</div>`).join("")||"<span class='muted'>Nothing added yet</span>"}</div>`).join("")}
+function hardReset(){localStorage.removeItem(KEY);state=fresh();discPage=0;narPage=0;show("welcome");updateResume()}
+document.addEventListener("DOMContentLoaded",()=>{updateResume();if(state.final.length)renderFinal()});
+</script>
+</body></html>
