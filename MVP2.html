@@ -1,1 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Core Values → Full Bucket — MVP 2</title>
+<style>
+:root{--ink:#17363b;--teal:#176d70;--teal2:#0f595c;--mint:#dff1eb;--cream:#fbf8f0;--card:#fffdf7;--gold:#e8b85a;--muted:#667477;--line:#d8e2df;--shadow:0 8px 24px rgba(22,54,59,.09)}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.45}
+.app{max-width:760px;margin:auto;min-height:100vh;background:#fff}.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);padding:12px 18px 10px}.brand{font-weight:800;color:var(--teal);font-size:17px}.progress{height:5px;background:#e9efed;border-radius:8px;margin-top:9px;overflow:hidden}.progress>div{height:100%;background:var(--teal);width:0;transition:.3s}
+main{padding:25px 18px 42px}.screen{display:none}.screen.active{display:block}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--teal);text-transform:uppercase;margin-bottom:6px}
+h1{font-size:34px;line-height:1.08;margin:5px 0 12px}h2{font-size:24px;line-height:1.18;margin:8px 0 10px}h3{margin:5px 0 8px}.lead{font-size:19px;color:#40575b}.muted{color:var(--muted)}
+.tip{background:var(--mint);border-radius:16px;padding:15px;margin:16px 0}.panel{border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0;background:#fff}.btn{width:100%;border:0;border-radius:14px;padding:16px 15px;margin:8px 0;background:var(--teal);color:white;font-size:17px;font-weight:800}.btn:disabled{opacity:.38}.btn.secondary{background:white;color:var(--teal);border:1px solid var(--teal)}.btn.small{padding:11px;font-size:15px}
+.batch-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:12px 0}.counter{font-weight:800}.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}
+.value-card{min-height:132px;border:2px solid #d6ddd9;border-radius:16px;background:var(--card);padding:14px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.03);transition:.12s;cursor:pointer}
+.value-card .name{font-size:20px;font-weight:800}.value-card .status{font-size:12px;font-weight:900;letter-spacing:.08em;color:#7a8585}.value-card.keep{background:var(--teal);border-color:var(--teal);color:#fff;transform:translateY(-2px);box-shadow:var(--shadow)}.value-card.keep .status{color:#fff}
+.navrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.chips{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}.chip{border-radius:999px;background:#eef4f2;padding:7px 10px;font-size:13px}.chip.on{background:var(--teal);color:white}
+textarea,input,select{width:100%;font:inherit;border:1px solid #bfcfcb;border-radius:12px;padding:12px;background:#fff;margin:6px 0 10px}textarea{min-height:92px;resize:vertical}
+.prompt{border-left:4px solid var(--gold);padding:10px 12px;background:#fffaf0;margin:12px 0}.choice{display:block;border:1px solid var(--line);padding:12px;border-radius:12px;margin:8px 0;background:#fff}
+.week{display:grid;grid-template-columns:1fr;gap:8px}.day{border:1px solid var(--line);border-radius:14px;padding:12px}.day strong{display:block;margin-bottom:6px}
+.activity{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}.activity .meta{font-size:13px;color:var(--muted)}
+.bucket{height:210px;border:4px solid var(--teal);border-top:0;border-radius:0 0 35px 35px;position:relative;overflow:hidden;margin:22px auto;max-width:280px;background:#f7fbfa}.fill{position:absolute;left:0;right:0;bottom:0;background:var(--mint);height:18%;transition:.4s}.bucketlabel{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;font-weight:800;z-index:2}
+footer{padding:20px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+@media(max-width:430px){h1{font-size:31px}.cards{gap:9px}.value-card{min-height:118px;padding:12px}.value-card .name{font-size:18px}}
+</style>
+</head>
+<body><div class="app">
+<header class="top"><div class="brand">Core Values → Full Bucket</div><div class="progress"><div id="progress"></div></div></header>
+<main>
+<section id="welcome" class="screen active">
+<div class="eyebrow">A guided self-discovery exercise</div><h1>You spend a lot of your life taking care of what matters.</h1>
+<p class="lead">This helps you discover what matters to <strong>you</strong> — and make room for what fills your bucket.</p>
+<div class="tip"><strong>Your answers are not permanent.</strong> These are the values that feel most important in this season of your life.</div>
+<p>You’ll first notice what resonates, then gently narrow your choices. After you find your three, we’ll help you discover what supports them and where those things can realistically fit into your week.</p>
+<button class="btn" onclick="beginDiscovery()">Begin</button>
+</section>
 
+<section id="discover" class="screen">
+<div class="eyebrow">Discovery pass</div><h1>What catches your attention?</h1>
+<p class="lead">Don’t narrow anything down yet. Keep anything that feels meaningful — even a little.</p>
+<div class="tip">There is <strong>no limit</strong> in this first pass. You’ll narrow later.</div>
+<div class="batch-meta"><span id="discoverProgress"></span><span class="counter" id="discoverKeep"></span></div>
+<div class="cards" id="discoverCards"></div>
+<div class="navrow"><button class="btn secondary" id="discBack" onclick="discMove(-1)">Back</button><button class="btn" id="discNext" onclick="discMove(1)">Next</button></div>
+</section>
+
+<section id="discoveryDone" class="screen">
+<div class="eyebrow">First pass complete</div><h1>These caught your attention.</h1>
+<p class="lead" id="caughtText"></p><div id="caughtChips" class="chips"></div>
+<div class="tip">Now the work changes. You aren’t deciding which values are good or bad. You’re asking which ones are most central <strong>right now</strong>.</div>
+<button class="btn" onclick="startNarrow()">Start narrowing</button>
+<button class="btn secondary" onclick="showDiscoveryBatch(Math.ceil(VALUES.length/6)-1)">Review my last discovery group</button>
+</section>
+
+<section id="narrow" class="screen">
+<div class="eyebrow" id="narrowEye"></div><h1 id="narrowTitle"></h1><p class="lead" id="narrowLead"></p>
+<div class="tip" id="narrowTip"></div>
+<div class="batch-meta"><span id="narrowProgress"></span><span class="counter" id="narrowCount"></span></div>
+<div class="cards" id="narrowCards"></div>
+<div class="navrow"><button class="btn secondary" id="narBack" onclick="narMove(-1)">Back</button><button class="btn" id="narNext" onclick="narMove(1)">Next</button></div>
+</section>
+
+<section id="narrowReview" class="screen">
+<div class="eyebrow">Review before lock-in</div><h1 id="reviewTitle"></h1><p id="reviewMsg" class="lead"></p>
+<div id="reviewChips" class="chips"></div><div id="stuckHelp"></div>
+<button class="btn" id="lockBtn" onclick="lockNarrow()">Lock in my choices</button>
+<button class="btn secondary" onclick="returnToNarrow()">Go back and change choices</button>
+</section>
+
+<section id="final" class="screen">
+<div class="eyebrow">Your three — right now</div><h1>Do these feel like you?</h1><p class="lead">These are not a permanent label. They’re the three that rose to the top in this season of your life.</p>
+<div id="finalCards" class="cards"></div>
+<button class="btn" onclick="renderDefinitions();show('define')">Yes — these feel like me</button>
+<button class="btn secondary" onclick="reconsider()">Something doesn’t fit</button>
+</section>
+
+<section id="define" class="screen">
+<div class="eyebrow">Make them yours</div><h1>What do these values mean to you?</h1>
+<p class="lead">Forget the dictionary. We’re interested in your lived experience.</p><div id="defineBox"></div>
+<button class="btn" onclick="saveDefinitions()">Continue</button>
+</section>
+
+<section id="evidence" class="screen">
+<div class="eyebrow">Look for evidence</div><h1>When have you actually felt this?</h1>
+<p class="lead">You don’t need to invent the “right” activity. Start with your own life.</p><div id="evidenceBox"></div>
+<button class="btn" onclick="saveEvidence()">Continue</button>
+</section>
+
+<section id="activities" class="screen">
+<div class="eyebrow">What fills your bucket?</div><h1>Turn memories into possibilities.</h1>
+<p class="lead">People, places, music, nature, movement, creativity, learning, service, spirituality, quiet, recreation — these are prompts, not prescriptions.</p>
+<div id="activityBox"></div><button class="btn" onclick="saveActivities()">Continue to my time</button>
+</section>
+
+<section id="timeIntro" class="screen">
+<div class="eyebrow">Before adding anything</div><h1>Where does your time already go?</h1>
+<p class="lead">Don’t change your life yet. First, sketch a normal week as it really is.</p>
+<div class="tip">Use broad blocks. This is not a minute-by-minute calendar and it is not a productivity test.</div>
+<button class="btn" onclick="renderWeek();show('week')">Map my week</button>
+</section>
+
+<section id="week" class="screen">
+<div class="eyebrow">My real week</div><h1>Find the openings.</h1>
+<p class="muted">For each day, note your major commitments and roughly how much genuinely flexible time you usually have.</p>
+<div id="weekBox" class="week"></div><button class="btn" onclick="saveWeek()">Find opportunities</button>
+</section>
+
+<section id="plan" class="screen">
+<div class="eyebrow">My Bucket Plan</div><h1>Make room for what matters.</h1>
+<p class="lead">Choose small, realistic opportunities. Every plan should connect to one of your three.</p>
+<div id="planBox"></div><button class="btn" onclick="savePlan()">Save my Bucket Plan</button>
+</section>
+
+<section id="dashboard" class="screen">
+<div class="eyebrow">Your bucket</div><h1>Notice what replenishes you.</h1><p class="muted">This is a reflection, not a clinical score or a streak.</p>
+<div class="bucket"><div class="fill" id="bucketFill"></div><div class="bucketlabel">What has been filling my bucket lately?</div></div>
+<div id="todayPlan"></div>
+<button class="btn" onclick="renderCheckin();show('checkin')">Gentle check-in</button>
+<button class="btn secondary" onclick="renderMap();show('map')">My personal map</button>
+<button class="btn secondary" onclick="renderWeek();show('week')">Update my week</button>
+</section>
+
+<section id="checkin" class="screen">
+<div class="eyebrow">Gentle check-in</div><h1>What happened?</h1><p class="lead">Missed activities are information, not failure.</p>
+<div id="checkinBox"></div><button class="btn secondary" onclick="renderDashboard();show('dashboard')">Back to my bucket</button>
+</section>
+
+<section id="reflect" class="screen">
+<div class="eyebrow">Useful information</div><h1>Adjust, don’t judge.</h1><div id="reflectBox"></div>
+<button class="btn" onclick="renderDashboard();show('dashboard')">Back to my bucket</button>
+</section>
+
+<section id="map" class="screen">
+<div class="eyebrow">My personal map</div><h1>What matters to me right now.</h1><div id="mapBox"></div>
+<button class="btn" onclick="renderDashboard();show('dashboard')">Back</button>
+</section>
+</main>
+<footer>Self-reflection and personal-planning tool. Not therapy, diagnosis, or a replacement for professional care.</footer>
+</div>
+<script>
+const VALUES=["Acceptance","Adventure","Authenticity","Beauty","Belonging","Calm","Challenge","Community","Compassion","Connection","Contentment","Contribution","Courage","Creativity","Curiosity","Dependability","Discipline","Discovery","Education","Efficiency","Equality","Excellence","Family","Faith","Financial Security","Freedom","Friendship","Fun","Generosity","Growth","Health","Honesty","Hope","Humility","Independence","Inner Peace","Integrity","Joy","Justice","Kindness","Knowledge","Leadership","Learning","Loyalty","Love","Meaning","Music","Nature","Open-mindedness","Order","Patience","Peace","Personal Growth","Play","Pleasure","Privacy","Purpose","Reliability","Respect","Responsibility","Safety","Self-Discipline","Self-Expression","Self-Respect","Service","Simplicity","Spirituality","Stability","Stillness","Strength","Success","Support","Teaching","Tradition","Trust","Truth","Understanding","Variety","Vitality","Wisdom","Wonder","Work"];
+const KEY="core_values_full_bucket_mvp2";
+const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+let state=load(), discPage=0, narPage=0;
+function fresh(){return{discovery:{},pool:[],stage:0,stagePools:[],narrow:{},final:[],definitions:{},evidence:{},activities:{},week:{},plan:[],checkins:[]}}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||fresh()}catch(e){return fresh()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");let p={welcome:0,discover:10,discoveryDone:20,narrow:30,narrowReview:45,final:55,define:62,evidence:69,activities:76,timeIntro:81,week:86,plan:92,dashboard:100,checkin:100,reflect:100,map:100};document.getElementById("progress").style.width=(p[id]||0)+"%";scrollTo(0,0)}
+function beginDiscovery(){state=fresh();save();discPage=0;showDiscoveryBatch(0)}
+function cardHTML(v,on,fn){return `<div class="value-card ${on?"keep":""}" onclick="${fn}('${v.replace(/'/g,"\\'")}')"><div class="name">${esc(v)}</div><div class="status">${on?"✓ KEEP":"NOT NOW"}</div></div>`}
+function showDiscoveryBatch(p){discPage=Math.max(0,Math.min(p,Math.ceil(VALUES.length/6)-1));show("discover");let start=discPage*6,b=VALUES.slice(start,start+6);document.getElementById("discoverCards").innerHTML=b.map(v=>cardHTML(v,!!state.discovery[v],"toggleDisc")).join("");document.getElementById("discoverProgress").textContent=`${start+1}–${start+b.length} of ${VALUES.length} considered`;document.getElementById("discoverKeep").textContent=`${Object.values(state.discovery).filter(Boolean).length} caught my attention`;document.getElementById("discBack").disabled=discPage===0;document.getElementById("discNext").textContent=discPage===Math.ceil(VALUES.length/6)-1?"Finish first pass":"Next 6"}
+function toggleDisc(v){state.discovery[v]=!state.discovery[v];save();showDiscoveryBatch(discPage)}
+function discMove(d){if(d>0&&discPage===Math.ceil(VALUES.length/6)-1){state.pool=VALUES.filter(v=>state.discovery[v]);if(state.pool.length<3){alert("Keep at least three values that catch your attention before moving on.");return}save();renderDiscoveryDone();show("discoveryDone")}else showDiscoveryBatch(discPage+d)}
+function renderDiscoveryDone(){let n=state.pool.length;document.getElementById("caughtText").textContent=`${n} values caught your attention. That is completely fine — you were not supposed to limit yourself yet.`;document.getElementById("caughtChips").innerHTML=state.pool.map(v=>`<span class="chip on">${esc(v)}</span>`).join("")}
+const TARGETS=[40,20,10,3];
+function target(){return TARGETS[state.stage]}
+function startNarrow(){state.stage=state.pool.length<=40?1:0;if(state.stage===1&&state.pool.length<20)state.stage=2;if(state.stage===2&&state.pool.length<10)state.stage=3;state.stagePools[state.stage]=state.pool.slice();state.narrow={};state.pool.forEach(v=>state.narrow[v]=true);save();narPage=0;renderNarrow()}
+function renderNarrow(){show("narrow");let t=target(),pool=state.stagePools[state.stage]||state.pool, batch=t<=10?pool.length:6,start=narPage*batch,b=pool.slice(start,start+batch);document.getElementById("narrowEye").textContent=`Narrowing toward ${t}`;document.getElementById("narrowTitle").textContent=t===3?"Which three feel most central right now?":`Which ${t} matter most right now?`;document.getElementById("narrowLead").textContent="You can change your mind until you explicitly lock this round.";document.getElementById("narrowTip").innerHTML=t===3?"This is not a lifetime label. Ask which values feel most central in this season of your life.":"Tap a card to move it between <strong>KEEP</strong> and <strong>NOT NOW</strong>. Nothing locks automatically.";document.getElementById("narrowCards").innerHTML=b.map(v=>cardHTML(v,!!state.narrow[v],"toggleNar")).join("");let count=pool.filter(v=>state.narrow[v]).length;document.getElementById("narrowProgress").textContent=t<=10?`${pool.length} values together`:`${start+1}–${start+b.length} of ${pool.length}`;document.getElementById("narrowCount").textContent=`${count} currently KEEP`;document.getElementById("narBack").disabled=narPage===0;let last=t<=10||start+batch>=pool.length;document.getElementById("narNext").textContent=last?"Review choices":"Next 6";document.getElementById("narNext").onclick=()=>last?reviewNarrow():narMove(1)}
+function toggleNar(v){state.narrow[v]=!state.narrow[v];save();renderNarrow()}
+function narMove(d){narPage=Math.max(0,narPage+d);renderNarrow()}
+function reviewNarrow(){let pool=state.stagePools[state.stage],kept=pool.filter(v=>state.narrow[v]),t=target();document.getElementById("reviewTitle").textContent=`You currently have ${kept.length}. Target: ${t}.`;document.getElementById("reviewMsg").textContent=kept.length===t?"Take one last look. Nothing becomes final until you lock it.":kept.length>t?`You still have ${kept.length-t} to set aside for now.`:`Bring ${t-kept.length} back into KEEP before locking.`;document.getElementById("reviewChips").innerHTML=kept.map(v=>`<span class="chip on">${esc(v)}</span>`).join("");document.getElementById("lockBtn").disabled=kept.length!==t;document.getElementById("stuckHelp").innerHTML=kept.length!==t?`<div class="prompt"><strong>Feeling stuck?</strong><br>Try asking: “If this were missing from my life, would something important feel absent?” “Is this truly mine, or something I think I should value?” “Which choice feels most central right now?”</div>`:"";show("narrowReview")}
+function returnToNarrow(){narPage=0;renderNarrow()}
+function lockNarrow(){let pool=state.stagePools[state.stage],kept=pool.filter(v=>state.narrow[v]);state.pool=kept;if(target()===3){state.final=kept.slice();save();renderFinal();show("final");return}state.stage++;state.stagePools[state.stage]=kept.slice();state.narrow={};kept.forEach(v=>state.narrow[v]=true);save();narPage=0;renderNarrow()}
+function renderFinal(){document.getElementById("finalCards").innerHTML=state.final.map(v=>`<div class="value-card keep"><div class="name">${esc(v)}</div><div class="status">ONE OF MY THREE</div></div>`).join("")}
+function reconsider(){state.stage=3;let p=state.stagePools[3]||state.pool;state.narrow={};p.forEach(v=>state.narrow[v]=state.final.includes(v));narPage=0;renderNarrow()}
+function renderDefinitions(){document.getElementById("defineBox").innerHTML=state.final.map(v=>`<div class="panel"><h2>${esc(v)}</h2><p class="muted">When you chose this, what were you thinking about? What would more of it look like in your life?</p><textarea data-def="${esc(v)}" placeholder="To me, ${esc(v)} means...">${esc(state.definitions[v]||"")}</textarea></div>`).join("")}
+function saveDefinitions(){document.querySelectorAll("[data-def]").forEach(x=>state.definitions[x.dataset.def]=x.value.trim());save();renderEvidence();show("evidence")}
+function renderEvidence(){document.getElementById("evidenceBox").innerHTML=state.final.map(v=>`<div class="panel"><h2>${esc(v)}</h2><p>Think of a real moment when you experienced this value. Where were you? Who was there? What were you doing?</p><textarea data-ev="${esc(v)}" placeholder="A time I remember...">${esc(state.evidence[v]||"")}</textarea></div>`).join("")}
+function saveEvidence(){document.querySelectorAll("[data-ev]").forEach(x=>state.evidence[x.dataset.ev]=x.value.trim());save();renderActivities();show("activities")}
+function renderActivities(){document.getElementById("activityBox").innerHTML=state.final.map(v=>{let a=state.activities[v]||[];return `<div class="panel"><h2>${esc(v)}</h2><p class="muted">What people, places or actions have actually helped you experience this? Add up to three for now.</p>${[0,1,2].map(i=>`<div class="activity"><input data-act="${esc(v)}" data-i="${i}" placeholder="Example: spend time near water" value="${esc(a[i]?.name||"")}"><select data-time="${esc(v)}" data-i="${i}"><option value="5">About 5 minutes</option><option value="15">About 15 minutes</option><option value="30">About 30 minutes</option><option value="60">About 1 hour</option><option value="120">A few hours</option></select></div>`).join("")}</div>`}).join("");state.final.forEach(v=>(state.activities[v]||[]).forEach((a,i)=>{let s=document.querySelector(`[data-time="${CSS.escape(v)}"][data-i="${i}"]`);if(s)s.value=a.minutes||15}))}
+function saveActivities(){state.final.forEach(v=>{state.activities[v]=[];document.querySelectorAll(`[data-act="${CSS.escape(v)}"]`).forEach(x=>{if(x.value.trim()){let i=x.dataset.i,s=document.querySelector(`[data-time="${CSS.escape(v)}"][data-i="${i}"]`);state.activities[v].push({name:x.value.trim(),minutes:+s.value})}})});save();show("timeIntro")}
+function renderWeek(){document.getElementById("weekBox").innerHTML=DAYS.map(d=>{let w=state.week[d]||{};return `<div class="day"><strong>${d}</strong><input data-commit="${d}" placeholder="Major commitments: work, caregiving, appointments..." value="${esc(w.commitments||"")}"><select data-free="${d}"><option value="0">No dependable opening</option><option value="15">About 15 flexible minutes</option><option value="30">About 30 flexible minutes</option><option value="60">About 1 flexible hour</option><option value="120">A few flexible hours</option></select></div>`}).join("");DAYS.forEach(d=>{let s=document.querySelector(`[data-free="${d}"]`);if(s)s.value=state.week[d]?.free||0})}
+function saveWeek(){DAYS.forEach(d=>state.week[d]={commitments:document.querySelector(`[data-commit="${d}"]`).value.trim(),free:+document.querySelector(`[data-free="${d}"]`).value});save();renderPlan();show("plan")}
+function allActivities(){return state.final.flatMap(v=>(state.activities[v]||[]).map(a=>({...a,value:v})))}
+function renderPlan(){let acts=allActivities();document.getElementById("planBox").innerHTML=DAYS.map(d=>{let free=state.week[d]?.free||0,fit=acts.filter(a=>a.minutes<=free);if(!free)return "";return `<div class="panel"><h3>${d} <span class="muted">• about ${free} flexible min</span></h3><select data-plan="${d}"><option value="">Leave this opening open</option>${fit.map((a,i)=>`<option value="${esc(a.value)}|||${esc(a.name)}|||${a.minutes}">${esc(a.value)} — ${esc(a.name)} (${a.minutes} min)</option>`).join("")}</select></div>`}).join("")||`<div class="tip">You didn’t identify any dependable openings yet. That is useful information. Go back and adjust your week only if something was missed.</div>`}
+function savePlan(){state.plan=[];document.querySelectorAll("[data-plan]").forEach(s=>{if(s.value){let [value,name,minutes]=s.value.split("|||");state.plan.push({day:s.dataset.plan,value,name,minutes:+minutes})}});save();renderDashboard();show("dashboard")}
+function renderDashboard(){let helped=state.checkins.filter(c=>c.result==="helped").length,total=state.checkins.length,pct=total?Math.min(85,18+helped*12):18;document.getElementById("bucketFill").style.height=pct+"%";document.getElementById("todayPlan").innerHTML=`<div class="panel"><h2>My Bucket Plan</h2>${state.plan.length?state.plan.map(p=>`<div class="activity"><strong>${esc(p.day)} • ${esc(p.value)}</strong><br>${esc(p.name)} <span class="meta">(${p.minutes} min)</span></div>`).join(""):`<p class="muted">No activities scheduled yet. Your week can be adjusted anytime.</p>`}</div>`}
+function renderCheckin(){document.getElementById("checkinBox").innerHTML=state.plan.length?state.plan.map((p,i)=>`<div class="panel"><h3>${esc(p.value)} — ${esc(p.name)}</h3><p>${esc(p.day)} • ${p.minutes} minutes</p><button class="btn small" onclick="check(${i},'helped')">I did it — it helped</button><button class="btn secondary small" onclick="check(${i},'nohelp')">I did it — it didn’t really help</button><button class="btn secondary small" onclick="check(${i},'missed')">Not this time</button></div>`).join(""):`<div class="tip">There is nothing scheduled to check in on yet.</div>`}
+function check(i,result){let p=state.plan[i];state.checkins.push({...p,result,date:new Date().toISOString()});save();let msg=result==="helped"?`You noticed that <strong>${esc(p.name)}</strong> supported <strong>${esc(p.value)}</strong>. That’s useful evidence from your own life.`:result==="nohelp"?`You made time for <strong>${esc(p.name)}</strong>, but it didn’t seem to support <strong>${esc(p.value)}</strong> this time. Would another activity fit better?`:`You didn’t get to <strong>${esc(p.name)}</strong>. That isn’t failure. Was the timing unrealistic, was the activity too large, or did something else simply matter more?`;document.getElementById("reflectBox").innerHTML=`<div class="tip">${msg}</div><p>Use this information the next time you adjust your Bucket Plan.</p>`;show("reflect")}
+function renderMap(){document.getElementById("mapBox").innerHTML=state.final.map(v=>`<div class="panel"><h2>${esc(v)}</h2><p><strong>What it means to me</strong><br>${esc(state.definitions[v]||"Not written yet")}</p><p><strong>A time I experienced it</strong><br>${esc(state.evidence[v]||"Not written yet")}</p><p><strong>What may fill this part of my bucket</strong></p>${(state.activities[v]||[]).map(a=>`<div class="chip on">${esc(a.name)} • ${a.minutes} min</div>`).join("")||"<span class='muted'>Nothing added yet</span>"}</div>`).join("")}
+document.addEventListener("DOMContentLoaded",()=>{renderDefinitions();renderFinal();if(state.final.length)renderDashboard()});
+</script></body></html>
