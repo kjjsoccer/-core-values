@@ -22,7 +22,7 @@
 
         body { margin: 0; font-family: -apple-system, sans-serif; background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
         .app-container { max-width: 480px; margin: 0 auto; min-height: 100vh; background: white; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; }
-        
+
         /* Typography & Standard Components */
         h2 { color: var(--primary); margin-top: 0; }
         h3 { margin-bottom: 8px; }
@@ -34,7 +34,7 @@
         .btn-primary { background: var(--primary); color: white; }
         .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); }
         .disabled { opacity: 0.3; cursor: not-allowed; }
-        
+
         input[type="text"], textarea { padding: 12px; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 16px; }
 
         /* Card Sort Experience */
@@ -58,7 +58,7 @@
 </head>
 <body>
 <div class="app-container">
-    
+
     <!-- Screens defined below -->
 
     <!-- Screen 1: Welcome -->
@@ -66,7 +66,7 @@
         <h2>Welcome to Your Journey</h2>
         <p>This is a non-prescriptive path to discovering what truly matters to you and what replenishes your unique 'bucket.' There are no generic rules here—only your own definitions and insights.</p>
         <button class="btn-primary" onclick="app.startSort()">Begin Card Funnel</button>
-    }
+    </div>
 
     <!-- Screen 2: Sort -->
     <div id="sort" class="screen">
@@ -78,7 +78,7 @@
         <div id="timer-warning" class="timer-warning">Time's up. Take a breath. Lock in your choices.</div>
         <div id="card-table" class="card-table"></div>
         <button id="lock-btn" class="btn-primary disabled" onclick="app.advanceRound()">Next Round →</button>
-    }
+    </div>
 
     <!-- Screen 3: Review Three -->
     <div id="reviewThree" class="screen">
@@ -86,17 +86,17 @@
         <p>Look at these three words. This isn't a diagnosis; it's a discovery.</p>
         <div id="final-three" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0;"></div>
         <p>Do these three feel authentically like 'you' right now?</p>
-        <button class="btn-primary" onclick="app.setStep('DEFINE')">Yes, These Feel Like Me</button>
+        <button class="btn-primary" onclick="app.setStep('define')">Yes, These Feel Like Me</button>
         <button class="btn-secondary" style="margin-top:10px;" onclick="app.fallbackSort()">Something Doesn't Fit (Return to 10)</button>
-    }
+    </div>
 
     <!-- Screen 4: Define -->
     <div id="define" class="screen">
         <h3>Define in Your Own Words</h3>
         <p>What does each value mean to you personally? Avoid dictionary definitions.</p>
         <div id="define-inputs"></div>
-        <button class="btn-primary" onclick="app.setStep('ACTIVITIES')">Define Bucket Fillers</button>
-    }
+        <button class="btn-primary" onclick="app.setStep('activities')">Define Bucket Fillers</button>
+    </div>
 
     <!-- Screen 5: Activities -->
     <div id="activities" class="screen">
@@ -104,13 +104,13 @@
         <p>Identify specific, concrete actions, places, or experiences that nourish each value. (Multiple items allowed)</p>
         <div id="activity-inputs"></div>
         <button class="btn-primary" onclick="app.finishSetup()">Go to My Dashboard</button>
-    }
+    </div>
 
     <!-- Screen 6: Dashboard -->
     <div id="dashboard" class="screen">
         <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
-            <button class="btn-secondary" onclick="app.setStep('MAP')">My Map</button>
-            <button class="btn-secondary" onclick="app.setStep('BUCKET')">Check In</button>
+            <button class="btn-secondary" onclick="app.setStep('map')">My Map</button>
+            <button class="btn-secondary" onclick="app.setStep('bucket')">Check In</button>
         </div>
         <div class="bucket-container">
             <div class="bucket-graphic">
@@ -118,22 +118,22 @@
             </div>
         </div>
         <p style="text-align:center;"><strong>Current Replenishment Level</strong></p>
-    }
+    </div>
 
     <!-- Screen 7: Map -->
     <div id="map" class="screen">
         <h3>My Personal Map</h3>
         <div id="map-content"></div>
-        <button class="btn-secondary" onclick="app.setStep('DASHBOARD')">Back to Dashboard</button>
-    }
+        <button class="btn-secondary" onclick="app.setStep('dashboard')">Back to Dashboard</button>
+    </div>
 
     <!-- Screen 8: Bucket Check-In -->
     <div id="bucket" class="screen">
         <h3>Gentle Check-In</h3>
         <p>Did you engage in any of these self-defined activities recently?</p>
         <div id="checkin-content"></div>
-        <button class="btn-secondary" style="margin-top:20px;" onclick="app.setStep('DASHBOARD')">Back to Dashboard</button>
-    }
+        <button class="btn-secondary" style="margin-top:20px;" onclick="app.setStep('dashboard')">Back to Dashboard</button>
+    </div>
 
     <footer style="margin-top:auto;padding-top:24px;text-align:center;font-size:11px;color:#cbd5e0;">Self-reflection tool only. Inspired by PHP methods. Not medical or clinical therapy.</footer>
 </div>
@@ -141,19 +141,19 @@
 <script>
     /* [CORE V1 ENGINE] - PURE VANILLA JS. NO DEPENDENCIES. */
     const SEED_VALUES = [
-        "Acceptance", "Adventure", "Authenticity", "Beauty", "Belonging", "Calm", 
-        "Challenge", "Community", "Compassion", "Connection", "Contentment", "Contribution", 
-        "Courage", "Creativity", "Curiosity", "Dependability", "Discipline", "Discovery", 
-        "Education", "Efficiency", "Equality", "Excellence", "Family", "Faith", 
-        "Financial Security", "Freedom", "Friendship", "Fun", "Generosity", "Growth", 
-        "Health", "Honesty", "Hope", "Humility", "Independence", "Inner Peace", 
-        "Integrity", "Joy", "Justice", "Kindness", "Knowledge", "Leadership", 
-        "Learning", "Loyalty", "Love", "Meaning", "Nature", "Open-mindedness", 
-        "Order", "Patience", "Peace", "Personal Growth", "Play", "Purpose", 
-        "Reliability", "Respect", "Responsibility", "Safety", "Self-Discipline", 
-        "Self-Expression", "Self-Respect", "Service", "Simplicity", "Spirituality", 
-        "Stability", "Stillness", "Strength", "Success", "Support", "Teaching", 
-        "Tradition", "Trust", "Truth", "Understanding", "Variety", "Vitality", 
+        "Acceptance", "Adventure", "Authenticity", "Beauty", "Belonging", "Calm",
+        "Challenge", "Community", "Compassion", "Connection", "Contentment", "Contribution",
+        "Courage", "Creativity", "Curiosity", "Dependability", "Discipline", "Discovery",
+        "Education", "Efficiency", "Equality", "Excellence", "Family", "Faith",
+        "Financial Security", "Freedom", "Friendship", "Fun", "Generosity", "Growth",
+        "Health", "Honesty", "Hope", "Humility", "Independence", "Inner Peace",
+        "Integrity", "Joy", "Justice", "Kindness", "Knowledge", "Leadership",
+        "Learning", "Loyalty", "Love", "Meaning", "Nature", "Open-mindedness",
+        "Order", "Patience", "Peace", "Personal Growth", "Play", "Purpose",
+        "Reliability", "Respect", "Responsibility", "Safety", "Self-Discipline",
+        "Self-Expression", "Self-Respect", "Service", "Simplicity", "Spirituality",
+        "Stability", "Stillness", "Strength", "Success", "Support", "Teaching",
+        "Tradition", "Trust", "Truth", "Understanding", "Variety", "Vitality",
         "Wisdom", "Wonder", "Work", "Music", "Privacy", "Pleasure"
     ];
 
@@ -161,11 +161,17 @@
 
     class BucketApp {
         constructor() {
-            this.state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+            let saved = null;
+            try {
+                saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            } catch (e) {
+                saved = null;
+            }
+            this.state = saved || {
                 setupComplete: false,
                 userValues: [], // { name, def, activities: [], reflectionCount, effectiveCount }
                 checkins: [], // { actName, assisted, timestamp }
-                currentStep: 'WELCOME',
+                currentStep: 'welcome',
                 currentRound: 1,
                 currentDeck: SEED_VALUES,
                 selected: []
@@ -176,23 +182,28 @@
         }
 
         init() {
-            if(this.state.setupComplete) this.setStep('DASHBOARD');
-            else this.setStep(this.state.currentStep);
-            if(this.state.currentStep === 'SORT') this.renderSort();
+            if (this.state.setupComplete) {
+                this.setStep('dashboard');
+            } else {
+                this.setStep(this.state.currentStep || 'welcome');
+            }
+            if (this.state.currentStep === 'sort') this.renderSort();
         }
 
         save() {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
         }
 
+        // step ids match the actual element ids exactly (lowercase / camelCase)
         setStep(step) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(step.charAt(0).toLowerCase() + step.slice(1)).classList.add('active');
+            const el = document.getElementById(step);
+            if (el) el.classList.add('active');
             this.state.currentStep = step;
             this.save();
-            if(step === 'DASHBOARD') this.renderDashboard();
-            if(step === 'MAP') this.renderMap();
-            if(step === 'BUCKET') this.renderCheckinFlow();
+            if (step === 'dashboard') this.renderDashboard();
+            if (step === 'map') this.renderMap();
+            if (step === 'bucket') this.renderCheckinFlow();
         }
 
         // [CARD FUNNEL logic]
@@ -200,14 +211,14 @@
             this.state.currentRound = 1;
             this.state.currentDeck = SEED_VALUES;
             this.state.selected = [];
-            this.setStep('SORT');
+            this.setStep('sort');
             this.renderSort();
         }
 
         renderSort() {
             const table = document.getElementById('card-table');
             const target = this.targetCounts[this.state.currentRound - 1];
-            
+
             document.getElementById('round-num').textContent = this.state.currentRound;
             document.getElementById('target-count').textContent = target;
             table.innerHTML = '';
@@ -224,11 +235,11 @@
         }
 
         toggleCard(val, el) {
-            if(this.state.selected.includes(val)) {
+            if (this.state.selected.includes(val)) {
                 this.state.selected = this.state.selected.filter(v => v !== val);
                 el.classList.remove('selected');
             } else {
-                if(this.state.selected.length < this.targetCounts[this.state.currentRound - 1]) {
+                if (this.state.selected.length < this.targetCounts[this.state.currentRound - 1]) {
                     this.state.selected.push(val);
                     el.classList.add('selected');
                 }
@@ -240,14 +251,14 @@
             const target = this.targetCounts[this.state.currentRound - 1];
             const lockBtn = document.getElementById('lock-btn');
             document.getElementById('sort-counter').textContent = `${this.state.selected.length} / ${target} selected`;
-            
-            if(this.state.selected.length === target) lockBtn.classList.remove('disabled');
+
+            if (this.state.selected.length === target) lockBtn.classList.remove('disabled');
             else lockBtn.classList.add('disabled');
             this.save();
         }
 
         startSoftTimer() {
-            if(this.softTimer) clearTimeout(this.softTimer);
+            if (this.softTimer) clearTimeout(this.softTimer);
             document.getElementById('timer-warning').style.display = 'none';
             // V1 Soft Timer Refinement: warning only, no lockout
             this.softTimer = setTimeout(() => {
@@ -256,9 +267,9 @@
         }
 
         advanceRound() {
-            if(this.state.selected.length !== this.targetCounts[this.state.currentRound-1]) return;
-            
-            if(this.state.currentRound < 4) {
+            if (this.state.selected.length !== this.targetCounts[this.state.currentRound - 1]) return;
+
+            if (this.state.currentRound < 4) {
                 this.state.currentDeck = [...this.state.selected];
                 this.state.selected = [];
                 this.state.currentRound++;
@@ -274,18 +285,38 @@
             this.state.selected.forEach(val => {
                 finalThree.innerHTML += `<div class="value-card selected final-card"><span class="card-name">${val}</span></div>`;
             });
-            this.setStep('REVIEW_THREE');
+            this.setStep('reviewThree');
         }
 
         fallbackSort() {
-            this.state.currentDeck = this.state.currentDeck; // Should keep the current Round 4 pool (the top 10)
+            // Return to the pool from the start of Round 4 (the top 10).
             this.state.selected = [];
-            this.setStep('SORT');
+            this.setStep('sort');
             this.renderSort();
         }
 
         // [DEFINITION & ACTIVITY Setup]
-        // ... (Define & Activity methods follow signature logic)
+        finishSetup() {
+            this.state.setupComplete = true;
+            this.save();
+            this.setStep('dashboard');
+        }
+
+        renderDashboard() {
+            // Placeholder: renders the bucket level based on saved check-ins.
+            const level = document.getElementById('water-level');
+            if (level) level.style.height = '0%';
+        }
+
+        renderMap() {
+            const mapContent = document.getElementById('map-content');
+            if (mapContent) mapContent.innerHTML = '<p>Your personal map will appear here once values are defined.</p>';
+        }
+
+        renderCheckinFlow() {
+            const checkinContent = document.getElementById('checkin-content');
+            if (checkinContent) checkinContent.innerHTML = '<p>Check-in activities will appear here.</p>';
+        }
     }
 
     const app = new BucketApp();
